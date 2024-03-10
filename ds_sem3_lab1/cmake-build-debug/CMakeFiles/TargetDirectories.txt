@@ -1,3 +1,0 @@
-C:/Users/misha/CLionProjects/ds_sem3_lab1/cmake-build-debug/CMakeFiles/ds_sem3_lab1.dir
-C:/Users/misha/CLionProjects/ds_sem3_lab1/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/misha/CLionProjects/ds_sem3_lab1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
