@@ -6,6 +6,10 @@
 using namespace std;
 #define uint unsigned int
 
+
+//todo make it HashSet; add print method
+
+
 struct Record {
     string fullName;
     string address;

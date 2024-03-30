@@ -11,12 +11,12 @@ using std::list;
 using std::vector;
 using std::pair;
 
-static const int INIT_SIZE = 2;
+static constexpr int INIT_SIZE = 32;
 
 template<typename K, typename V>
 class HashTable {
 private:
-    static_assert(std::is_base_of<Hashable<K>, K>::value, "Key type must implement Hashable interface.");
+    static_assert(std::is_base_of_v<Hashable<K>, K>, "Key type must implement Hashable interface.");
     const Logger<HashTable> logger;
 
     size_t capacity;

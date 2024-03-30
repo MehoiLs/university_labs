@@ -17,8 +17,8 @@ class Logger {
 private:
 
     [[nodiscard]] std::string getCurrentTime() const {
-        auto now = std::chrono::system_clock::now();
-        auto now_c = std::chrono::system_clock::to_time_t(now);
+        const auto now = std::chrono::system_clock::now();
+        const auto now_c = std::chrono::system_clock::to_time_t(now);
         char buf[100];
         std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&now_c));
         return buf;
