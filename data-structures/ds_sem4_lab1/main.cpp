@@ -1,58 +1,47 @@
 #include <iostream>
-#include "MyClass.h"
-#include "HashTable.h"
+#include "HashSet.h"
 #include "HashString.h"
+#include "Record.h"
 
 using namespace std;
 #define uint unsigned int
 
-
-//todo make it HashSet; add print method
-
-
-struct Record {
-    string fullName;
-    string address;
-
-    void input () {
-        cin.ignore();
-        cout << "Enter full name: ";
-        getline(cin, fullName);
-        cout << "Enter address: ";
-        getline(cin, address);
-    }
-};
-
 bool isLoggingEnabled = false;
 
 int main() {
-    HashTable<HashString, Record> hashTable;
+    HashSet<Record> hashSet;
 
     uint entries;
     cout << "Enter the number of entries: ";
     cin >> entries;
 
     for (int i = 0; i < entries; ++i) {
-        HashString telephoneNumber;
-        cout << "Input the telephone number: ";
-        cin >> telephoneNumber;
         Record record;
         record.input();
-
-        hashTable.put(telephoneNumber, record);
+        hashSet.put(record);
     }
 
+    /**
+     * Actually, a HashSet probably isn't the best choice for this task.
+     * I believe a HashMap would be better, because we need to search by telephone number.
+     * Also, a HashSet shouldn't have 'get' method, because it's not a map.
+     *
+     * So, to get a record, we need to create a 'dummy' record so that 'equals' method could be called.
+     * Maybe there is a better solution for that, but I haven't come up with one yet.
+    **/
+
     bool isSearching = true;
+    Record possibleRecord;
     while (isSearching) {
         HashString telephoneNumber;
         cout << "********************************************\n";
         cout << "Enter the telephone number to search.\n";
         cin >> telephoneNumber;
+        possibleRecord.setTelephoneNumber(telephoneNumber);
 
-        auto record = hashTable.get(telephoneNumber);
+        auto record = hashSet.get(possibleRecord);
         if (record.has_value()) {
-            cout << "Full name: " << record.value().fullName << endl;
-            cout << "Address: " << record.value().address << endl;
+            record.value().print();
         } else {
             cerr << "Record not found." << endl;
         }
@@ -80,5 +69,5 @@ int main() {
  *      Тел номер
  *      ФИО
  *      адрес
- * По табельному номеру найти остальные сведения
+ * По тел номеру найти остальные сведения
  * */

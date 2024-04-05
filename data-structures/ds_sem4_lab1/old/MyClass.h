@@ -1,7 +1,7 @@
 #ifndef DS_SEM3_LAB1_MYCLASS_H
 #define DS_SEM3_LAB1_MYCLASS_H
 
-#include "Hashable.h"
+#include "../Hashable.h"
 
 class MyClass : public Hashable<MyClass> {
 

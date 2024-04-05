@@ -13,27 +13,27 @@ using std::pair;
 
 static constexpr int INIT_SIZE = 32;
 
-template<typename K, typename V>
-class HashTable {
+template<typename V>
+class HashSet {
 private:
-    static_assert(std::is_base_of_v<Hashable<K>, K>, "Key type must implement Hashable interface.");
-    const Logger<HashTable> logger;
+    static_assert(std::is_base_of_v<Hashable<V>, V>, "Key type must implement Hashable interface.");
+    const Logger<HashSet> logger;
 
     size_t capacity;
     size_t size;
-    vector<list<pair<K, V>>> table;
+    vector<list<V>> table;
 
     void rehash() {
         try {
             logger.log("Rehashing table..." + std::to_string(capacity) + " -> " + std::to_string(capacity * 2) + "...");
             capacity *= 2;
-            vector<list<pair<K, V>>> oldTable = std::move(table);
+            vector<list<V>> oldTable = std::move(table);
             freeTableMemory();
             table.resize(capacity);
 
             for (auto &bucket: oldTable) {
                 for (auto &entry: bucket) {
-                    put(entry.first, entry.second);
+                    put(entry);
                 }
             }
             logger.log("Rehashing completed.");
@@ -42,8 +42,8 @@ private:
         }
     }
 
-    int hashCode(const K& key) {
-        return key.hashCode() % capacity;
+    int hashCode(const V& value) {
+        return value.hashCode() % capacity;
     }
 
     void freeTableMemory() {
@@ -54,28 +54,28 @@ private:
     }
 
 public:
-    HashTable() : capacity(INIT_SIZE), size(0) {
+    HashSet() : capacity(INIT_SIZE), size(0) {
         table.resize(capacity);
     }
-    ~HashTable() {
+    ~HashSet() {
         freeTableMemory();
         size = capacity = 0;
     }
 
-    void put(const K& key, const V& value) {
+    void put(const V& value) {
         if (size >= capacity) {
             rehash();
         }
 
-        int index = hashCode(key);
-        for (auto& pair : table[index])  {
-            if (pair.first.equals(key)) {
-                pair.second = value;
+        int index = hashCode(value);
+        for (auto& listEntry : table[index]) {
+            if (listEntry.equals(value)) {
+                listEntry = value;
                 return;
             }
         }
 
-        table[index].push_back({key, value});
+        table[index].push_back({value});
         size++;
 
         if (table[index].size() >= 10) {
@@ -83,22 +83,22 @@ public:
         }
     }
 
-    std::optional<V> get(const K& key) {
-        int index = hashCode(key);
-        for (auto& pair : table[index]) {
-            if (pair.first.equals(key)) {
-                return pair.second;
+    std::optional<V> get(const V& value) {
+        int index = hashCode(value);
+        for (auto& listEntry : table[index]) {
+            if (listEntry.equals(value)) {
+                return listEntry;
             }
         }
         return std::nullopt;
     }
 
-    bool remove(const K& key) {
-        int index = hashCode(key);
-        auto& bucket = table[index];
-        for (auto it = bucket.begin(); it != bucket.end(); ++it) {
-            if (it->first.equals(key)) {
-                bucket.erase(it);
+    bool remove(const V& value) {
+        int index = hashCode(value);
+        auto& tableList = table[index];
+        for (auto it = tableList.begin(); it != tableList.end(); ++it) {
+            if (it->equals(value)) {
+                tableList.erase(it);
                 size--;
                 return true;
             }

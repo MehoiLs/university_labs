@@ -39,7 +39,7 @@ public:
         return is;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, HashString& hashString) {
+    friend std::ostream& operator<<(std::ostream& os, const HashString& hashString) {
         os << hashString.str;
         return os;
     }

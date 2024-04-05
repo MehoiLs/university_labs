@@ -5,8 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(ds_sem3_lab1 main.cpp
-        HashTable.h
+        HashSet.h
         Hashable.h
-        MyClass.h
+        old/MyClass.h
         HashString.h
         Logger.h)
