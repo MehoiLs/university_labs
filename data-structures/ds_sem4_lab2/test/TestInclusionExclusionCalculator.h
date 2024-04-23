@@ -1,14 +1,16 @@
-#ifndef DS_SEM4_LAB2_TESTLAB_H
-#define DS_SEM4_LAB2_TESTLAB_H
+#ifndef DS_SEM4_LAB2_TESTINCLUSIONEXCLUSIONCALCULATOR_H
+#define DS_SEM4_LAB2_TESTINCLUSIONEXCLUSIONCALCULATOR_H
 
 #include <cassert>
 #include <iostream>
-#include "Lab.h"
+#include <vector>
+#include "../InclusionExclusionCalculator.h"
 
 using std::cout;
 using std::cerr;
+using std::vector;
 
-class TestLab {
+class TestInclusionExclusionCalculator {
 private:
 
     static void handleAssertion(
@@ -31,7 +33,7 @@ private:
             const int lineAt,
             const string& testName = ""
     ) {
-        auto actual = Lab::performComparison(m, numbers);
+        auto actual = InclusionExclusionCalculator::performComparison(m, numbers);
         auto isPassed = (actual == expected);
         handleAssertion(isPassed, expected, actual, lineAt, testName);
     }
@@ -44,11 +46,11 @@ private:
     }
 
 public:
-    static void run() {
+    static void runTests() {
         testCountNumbers();
         cout << "\nFINISHED TESTING." << std::endl;
     }
 };
 
 
-#endif //DS_SEM4_LAB2_TESTLAB_H
+#endif //DS_SEM4_LAB2_TESTINCLUSIONEXCLUSIONCALCULATOR_H

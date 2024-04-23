@@ -1,38 +1,38 @@
-#ifndef DS_SEM4_LAB2_LAB_H
-#define DS_SEM4_LAB2_LAB_H
+#ifndef DS_SEM4_LAB2_INCLUSIONEXCLUSIONCALCULATOR_H
+#define DS_SEM4_LAB2_INCLUSIONEXCLUSIONCALCULATOR_H
 
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class Lab {
+class InclusionExclusionCalculator {
 private:
-    static vector<int> findAllProductsCombinations(const vector<int>& elements, vector<int>& current, int size, int index) {
+    static vector<int> findAllProductsCombinations(const vector<int>& elements, vector<int>& currentCombo, int comboSize, int currentIndex) {
         vector<int> products;
 
-        if (current.size() == size) {
+        if (currentCombo.size() == comboSize) {
             int product = 1;
-            for (int num : current) {
+            for (int num : currentCombo) {
                 product *= num;
             }
             products.push_back(product);
             return products;
         }
 
-        for (int i = index; i < elements.size(); ++i) {
-            current.push_back(elements[i]);
-            vector<int> subProducts = findAllProductsCombinations(elements, current, size, i + 1);
+        for (int i = currentIndex; i < elements.size(); ++i) {
+            currentCombo.push_back(elements[i]);
+            vector<int> subProducts = findAllProductsCombinations(elements, currentCombo, comboSize, i + 1);
             products.insert(products.end(), subProducts.begin(), subProducts.end());
-            current.pop_back();
+            currentCombo.pop_back();
         }
 
         return products;
     }
 
-    static vector<int> findAllProductsCombinations(const vector<int>& elements, int size, int index = 0) {
+    static vector<int> findAllProductsCombinations(const vector<int>& elements, int comboSize, int currentIndex = 0) {
         vector<int> current;
-        return findAllProductsCombinations(elements, current, size, index);
+        return findAllProductsCombinations(elements, current, comboSize, currentIndex);
     }
 
 
@@ -76,4 +76,4 @@ public:
  * натуральных чисел меньше или равных m, не делящихся ни на одно из заданных k чисел n_1, n_2, ..., n_k.
  * */
 
-#endif //DS_SEM4_LAB2_LAB_H
+#endif //DS_SEM4_LAB2_INCLUSIONEXCLUSIONCALCULATOR_H

@@ -1,10 +1,10 @@
-#include "TestLab.h"
-#include "Lab.h"
+#include "test/TestInclusionExclusionCalculator.h"
+#include "InclusionExclusionCalculator.h"
 #include <iostream>
 
 int main() {
-    TestLab::run();
-//    Lab lab;
+    TestInclusionExclusionCalculator::runTests();
+//    InclusionExclusionCalculator lab;
 //    lab.calculate();
 
     return 0;
