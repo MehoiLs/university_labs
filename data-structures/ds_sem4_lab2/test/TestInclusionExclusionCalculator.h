@@ -10,9 +10,22 @@ using std::cout;
 using std::cerr;
 using std::vector;
 
+/** Тестирование класса `InclusionExclusionCalculator`
+ *
+ * @author MehoiLs (Dorokhov Mikhail)
+ * */
 class TestInclusionExclusionCalculator {
 private:
 
+    /**
+     * Обработка assertion, вывод результата отдельной части теста, где был вызван `performAssert`.
+     *
+     * @param isPassed - результат проверки
+     * @param expected - ожидаемое значение
+     * @param actual - фактическое значение
+     * @param lineAt - номер строки, где был вызван `performAssert`
+     * @param testName - имя теста
+     */
     static void handleAssertion(
             const bool isPassed,
             const int expected,
@@ -26,6 +39,15 @@ private:
         }
     }
 
+    /**
+     * Выполнение assertion для метода `performComparison` класса `InclusionExclusionCalculator`.
+     *
+     * @param m - число, с которым производится сравнение
+     * @param numbers - вектор делителей
+     * @param expected - ожидаемое значение
+     * @param lineAt - номер строки, где был вызван `performAssert`
+     * @param testName - имя теста
+     */
     static void performAssertCountNumbers(
             const int m,
             const vector<int>& numbers,
@@ -38,6 +60,7 @@ private:
         handleAssertion(isPassed, expected, actual, lineAt, testName);
     }
 
+    /** Тестирование метода `performComparison` */
     static void testCountNumbers() {
         static const string TEST_NAME = "\"testCountNumbers\"";
 
@@ -46,6 +69,7 @@ private:
     }
 
 public:
+    /** Запуск всех тестов */
     static void runTests() {
         testCountNumbers();
         cout << "\nFINISHED TESTING." << std::endl;

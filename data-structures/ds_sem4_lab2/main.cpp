@@ -2,10 +2,16 @@
 #include "InclusionExclusionCalculator.h"
 #include <iostream>
 
+/**
+ * Главная функция.
+ * Для запуска тестов - вызвать метод runTests() класса TestInclusionExclusionCalculator.
+ * Для запуска программы - вызвать метод calculate() класса InclusionExclusionCalculator.
+ *
+ * @author MehoiLs (Dorokhov Mikhail)
+ */
 int main() {
     TestInclusionExclusionCalculator::runTests();
-//    InclusionExclusionCalculator lab;
-//    lab.calculate();
+//    InclusionExclusionCalculator::calculate();
 
     return 0;
 }
