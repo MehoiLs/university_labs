@@ -327,7 +327,7 @@ public:
                 }
             }
             assertSingleFieldEntry(x, y, fieldSize);
-            field[x-1][y-1] = state;
+            field[y-1][x-1] = state;
         }
         cout << "The field you've entered:\n";
         printField(field);
