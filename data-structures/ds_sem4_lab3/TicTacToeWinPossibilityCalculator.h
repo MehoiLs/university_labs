@@ -6,16 +6,22 @@ using TicTacToeFieldState::ZERO;
 using TicTacToeFieldState::CROSS;
 using TicTacToeFieldState::EMPTY;
 
-vector<vector<TicTacToeFieldState>> TEST_FIELD = {
-        {EMPTY, ZERO,   EMPTY,  CROSS,  ZERO    },  // - 0 - - 0
-        {EMPTY, ZERO,   CROSS,  CROSS,  EMPTY   },  // - 0 X X -
-        {CROSS, ZERO ,  CROSS,  ZERO,   CROSS   },  // X 0 X 0 X
-        {CROSS, ZERO,   EMPTY,  EMPTY,  ZERO    },  // X 0 - - 0
-        {EMPTY, CROSS,  CROSS,  EMPTY,  ZERO    }   // - X X - 0
-};
-
+/** Реализация задачи.
+ *
+ * @author MehoiLs (Dorokhov Mikhail)
+ */
 class TicTacToeWinPossibilityCalculator : private TicTacToeField {
 private:
+    /** Метод, проверяющий, является ли данная позиция выигрышной.
+     *
+     * @param field - игровое поле
+     * @param currentPlayer - текущий игрок (для которого производится проверка)
+     * @param winChainLength - длина выигрышной комбинации
+     * @param x - координата (горизонталь)
+     * @param y - координата (вертикаль)
+     * @param ignoreEmptySpots - игнорирование EMPTY ячеек. Используется для проверки, закончилась ли игра
+     * @return true - если данная позиция выигрышная; false - иначе
+     */
     static bool isGivenPosWinnable(
             const vector<vector<TicTacToeFieldState>>& field,
             const TicTacToeFieldState& currentPlayer,
@@ -23,6 +29,7 @@ private:
             const int x, const int y,
             const bool ignoreEmptySpots = false
     ) {
+        // if current pos is not current player's (or is not EMPTY if we `ignoreEmptySpots`) => return
         if ((field[y][x] != currentPlayer && field[y][x] != EMPTY) &&
             !(ignoreEmptySpots && field[y][x] == EMPTY)) return false;
         // try horizontal combo
@@ -45,6 +52,11 @@ private:
         return false;
     }
 
+    /** Метод, собирающий все пустые пары координат в вектор.
+     *
+     * @param field - игровое поле
+     * @return все пустые пары координат
+     */
     static vector<Coordinates> collectEmptySpots(const vector<vector<TicTacToeFieldState>>& field) {
         vector<Coordinates> emptyCords;
         const int fieldSize = field.size();
@@ -58,6 +70,12 @@ private:
         return emptyCords;
     }
 
+    /** Метод, проверяющий, закончилась ли игра.
+     *
+     * @param field - игровое поле
+     * @param winChainLength - длина выигрышной комбинации
+     * @return true - если игра завершилась; false - иначе
+     */
     //TODO - this might be optimized. rn it looks like it's not. :(
     static bool isGameFinished(const vector<vector<TicTacToeFieldState>>& field, const int winChainLength) {
         const auto fieldSize = field.size();
@@ -72,6 +90,16 @@ private:
         return false;
     }
 
+    /** Метод (основной), проверяющий вероятность победы текущего игрока.
+     * Выводит в консоль результат анализа.
+     *
+     * @param field - игровое поле
+     * @param player - игрок, для которого осуществляется проверка
+     * @param winChainLength - длина выигрышной комбинации
+     */
+    //TODO - this have to be BACKTRACKING. Can it be considered as one rn?
+    //TODO Ремарка: возможно стоит прикрутить рекурсию к списку пустых позиций, последовательно эти позиции заполнять в поле
+    //  и проверять, является ли результат заполнения выигрышным для той или иной стороны.
     static void calculateWinPossibility(
             const vector<vector<TicTacToeFieldState>>& field,
             const TicTacToeFieldState& player,
@@ -150,6 +178,10 @@ private:
     }
 
 public:
+    static void tests() {
+        test1();
+        test2();
+    }
     static void test1() {
         const int WIN_CHAIN_LENGTH = 3;
         vector<vector<TicTacToeFieldState>> field = {

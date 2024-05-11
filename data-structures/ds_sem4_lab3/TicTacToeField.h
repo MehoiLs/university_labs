@@ -40,6 +40,16 @@ static_assert(FIRST_PLAYER != SECOND_PLAYER && FIRST_PLAYER != EMPTY && SECOND_P
 
 constexpr bool DISABLED_ASSERTION = false;
 
+/** Базовый класс Крестиков-Ноликов.
+ * Содержит основную логику, необходимую для решения:
+ * - валидация позиций
+ * - валидация поля
+ * - получения текущей очереди
+ * - подсчёт комбинация на горизонтали, вертикали и диагоналях
+ * - ввод поля с клавиатуры
+ *
+ * @author MehoiLs (Dorokhov Mikhail)
+ */
 class TicTacToeField {
 protected:
     // Additional
