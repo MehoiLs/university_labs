@@ -1,8 +1,13 @@
-#include "TicTacToeWinCalculator.h"
+#include <thread>
+#include "TicTacToeWinPossibilityCalculator.h"
+
 
 int main() {
-    //TicTacToeWinCalculator::input();
-    TicTacToeWinCalculator::test();
+//    TicTacToeWinPossibilityCalculator::createOwnFieldAndPerformCalculations();
+//    cout << endl;
+    TicTacToeWinPossibilityCalculator::test1();
+    cout << endl;
+    TicTacToeWinPossibilityCalculator::test2();
 
     return 0;
 }
