@@ -8,10 +8,10 @@
 
 ### Описание структуры программы
 
-ds_sem4_lab2/**main.cpp** - точка запуска программы
-ds_sem4_lab2/**InclusionExclusionCalculator.h** - 
+- ds_sem4_lab2/**main.cpp** - точка запуска программы
+- ds_sem4_lab2/**InclusionExclusionCalculator.h** - 
 реализация задачи
-ds_sem_4_lab2/test/**TestInclusionExclusionCalculator.h** -
+- ds_sem_4_lab2/test/**TestInclusionExclusionCalculator.h** -
 базовая реализация тестов для класса **InclusionExclusionCalculator.h**
 
 ### Описание работы программы
