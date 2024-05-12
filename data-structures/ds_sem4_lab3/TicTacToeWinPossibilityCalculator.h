@@ -111,50 +111,47 @@ private:
             queue<Coordinates> emptySpots,
             const TicTacToeFieldState& targetPlayer,
             const TicTacToeFieldState& currentPlayer,
-            const int winChainLength,
-            bool isSwitching = false
+            const int winChainLength
     ) {
         if (emptySpots.empty()) {
             return;
         }
 
-        while (!emptySpots.empty()) {
-            const auto pos = emptySpots.front();
-            emptySpots.pop();
+        const auto pos = emptySpots.front();
+        emptySpots.pop();
 
-            field[pos.y][pos.x] = currentPlayer;
-            const auto actualEmptySpots = toQueue(collectEmptySpots(field));
+        field[pos.y][pos.x] = currentPlayer;
+        const auto actualEmptySpots = toQueue(collectEmptySpots(field));
 
-            //TODO REMOVE 'sleep_for'
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
-            cerr << "Placing " << stateToString(currentPlayer) << " at (" << pos.x << ", " << pos.y << ")\n";
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            printFieldWithGivenPos(field, pos.x, pos.y);
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            cout << endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        //TODO REMOVE 'sleep_for'
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        cerr << "Placing " << stateToString(currentPlayer) << " at (" << pos.x << ", " << pos.y << ")\n";
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        printFieldWithGivenPos(field, pos.x, pos.y);
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        cout << endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-            if (isGivenPosWinnable(field, currentPlayer, winChainLength, pos.x, pos.y)) {
-                if (currentPlayer == targetPlayer) {
-                    cout << "The player " << stateToString(targetPlayer) << " CAN WIN by filling the spot at (" << pos.x
-                         << ", " << pos.y << ").\n\n";
-                } else {
-                    cerr << "The player " << stateToString(targetPlayer) << " WILL LOSE if the player "
-                         << stateToString(currentPlayer) << " fills the spot at (" << pos.x << ", " << pos.y
-                         << ").\n\n";
-                }
-                field[pos.y][pos.x] = EMPTY;
-
-
-                //TODO I have to find out how do I handle terminating the recursion correctly here.
-                //  It does check all the empty spots, but it does not stop after finding all of them.
-
-                performFillFieldUntilWinSpotIsFound(field, emptySpots, targetPlayer,
-                                                    currentPlayer, winChainLength);
+        if (isGivenPosWinnable(field, currentPlayer, winChainLength, pos.x, pos.y)) {
+            if (currentPlayer == targetPlayer) {
+                cout << "The player " << stateToString(targetPlayer) << " CAN WIN by filling the spot at (" << pos.x
+                     << ", " << pos.y << ").\n\n";
             } else {
-                performFillFieldUntilWinSpotIsFound(field, actualEmptySpots, targetPlayer,
-                                                    getOtherPlayer(currentPlayer), winChainLength);
+                cerr << "The player " << stateToString(targetPlayer) << " WILL LOSE if the player "
+                     << stateToString(currentPlayer) << " fills the spot at (" << pos.x << ", " << pos.y
+                     << ").\n\n";
             }
+            field[pos.y][pos.x] = EMPTY;
+
+
+            //TODO I have to find out how do I handle terminating the recursion correctly here.
+            //  It does check all the empty spots, but it does not stop after finding all of them.
+            
+            performFillFieldUntilWinSpotIsFound(field, emptySpots, targetPlayer,
+                                                currentPlayer, winChainLength);
+        } else {
+            performFillFieldUntilWinSpotIsFound(field, actualEmptySpots, targetPlayer,
+                                                getOtherPlayer(currentPlayer), winChainLength);
         }
     }
 
@@ -187,7 +184,10 @@ private:
 
         auto emptySpotsQueue = toQueue(emptySpots);
         performFillFieldUntilWinSpotIsFound(field, emptySpotsQueue, player, currentPlayer, winChainLength);
-
+//        for (int i = 0; i < emptySpots.size(); ++i) {
+//            performFillFieldUntilWinSpotIsFound(field, emptySpotsQueue, player, currentPlayer, winChainLength);
+//            emptySpotsQueue.pop();
+//        }
     }
 
 public:
