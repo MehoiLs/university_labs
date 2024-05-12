@@ -6,6 +6,13 @@ using TicTacToeFieldState::ZERO;
 using TicTacToeFieldState::CROSS;
 using TicTacToeFieldState::EMPTY;
 
+#include <queue>
+using std::queue;
+
+//TODO REMOVE
+#include <thread>
+#include <chrono>
+
 /** Реализация задачи.
  *
  * @author MehoiLs (Dorokhov Mikhail)
@@ -90,6 +97,67 @@ private:
         return false;
     }
 
+    template <typename T>
+    static queue<T> toQueue(const vector<T>& vec) {
+        queue<T> q;
+        for (const auto& el : vec) {
+            q.push(el);
+        }
+        return q;
+    }
+
+    static void performFillFieldUntilWinSpotIsFound(
+            vector<vector<TicTacToeFieldState>> field,
+            queue<Coordinates> emptySpots,
+            const TicTacToeFieldState& targetPlayer,
+            const TicTacToeFieldState& currentPlayer,
+            const int winChainLength,
+            bool isSwitching = false
+    ) {
+        if (emptySpots.empty()) {
+            return;
+        }
+
+        while (!emptySpots.empty()) {
+            const auto pos = emptySpots.front();
+            emptySpots.pop();
+
+            field[pos.y][pos.x] = currentPlayer;
+            const auto actualEmptySpots = toQueue(collectEmptySpots(field));
+
+            //TODO REMOVE 'sleep_for'
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            cerr << "Placing " << stateToString(currentPlayer) << " at (" << pos.x << ", " << pos.y << ")\n";
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            printFieldWithGivenPos(field, pos.x, pos.y);
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            cout << endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+            if (isGivenPosWinnable(field, currentPlayer, winChainLength, pos.x, pos.y)) {
+                if (currentPlayer == targetPlayer) {
+                    cout << "The player " << stateToString(targetPlayer) << " CAN WIN by filling the spot at (" << pos.x
+                         << ", " << pos.y << ").\n\n";
+                } else {
+                    cerr << "The player " << stateToString(targetPlayer) << " WILL LOSE if the player "
+                         << stateToString(currentPlayer) << " fills the spot at (" << pos.x << ", " << pos.y
+                         << ").\n\n";
+                }
+                field[pos.y][pos.x] = EMPTY;
+
+
+                //TODO I have to find out how do I handle terminating the recursion correctly here.
+                //  It does check all the empty spots, but it does not stop after finding all of them.
+
+                performFillFieldUntilWinSpotIsFound(field, emptySpots, targetPlayer,
+                                                    currentPlayer, winChainLength);
+            } else {
+                performFillFieldUntilWinSpotIsFound(field, actualEmptySpots, targetPlayer,
+                                                    getOtherPlayer(currentPlayer), winChainLength);
+            }
+        }
+    }
+
     /** Метод (основной), проверяющий вероятность победы текущего игрока.
      * Выводит в консоль результат анализа.
      *
@@ -110,70 +178,15 @@ private:
             return;
         }
         const auto otherPlayer = getOtherPlayer(player);
-        const auto currentTurn = getCurrentTurn(field);
+        const auto currentPlayer = getCurrentTurn(field);
         const auto emptySpots = collectEmptySpots(field);
         if (emptySpots.empty()) {
             cerr << "The field does not have any empty spots, hence the game has been finished.\n";
             return;
         }
 
-        // we need to calculate how many 'win spots' does current player have.
-        vector<Coordinates> currentPlayerWinSpots;
-        for (auto &pos : emptySpots) {
-            if (isGivenPosWinnable(field, player, winChainLength, pos.x, pos.y)) {
-                currentPlayerWinSpots.emplace_back(pos.x, pos.y);
-            }
-        }
-
-        // we need to calculate how many 'win spots' does OTHER player have.
-        vector<Coordinates> otherPlayerWinSpots;
-        for (auto &pos : emptySpots) {
-            if (isGivenPosWinnable(field, otherPlayer, winChainLength, pos.x, pos.y)) {
-                otherPlayerWinSpots.emplace_back(pos.x, pos.y);
-            }
-        }
-
-        if (currentPlayerWinSpots.empty()) {
-            cerr << "Current player cannot win, since they don't have any 'win spots'.\n";
-            return;
-        } else if (currentPlayerWinSpots.size() == 1 && currentTurn != player) {
-            if (emptySpots.size() == 1) {
-                cerr << "Current player cannot win, since they have only one 'win spot' (the only empty spot on the field) "
-                        "and current turn is going to be made by other player who can only place a " +
-                        stateToString(otherPlayer) + " on the only 'win spot', which is: " +
-                        currentPlayerWinSpots[0].toString() + ".\n";
-            } else {
-                cout << "Current player can win, but only if the other player decides to place a " +
-                stateToString(otherPlayer) + " on an any other spot but " + currentPlayerWinSpots[0].toString() + ".\n";
-            }
-            return;
-        } else if (currentPlayerWinSpots.size() == 1 && currentTurn == player) {
-            cout << "Current player CAN win, since they have 1 'win spot' (" + currentPlayerWinSpots[0].toString() + ").\n";
-            if (emptySpots.size() == 1) {
-                cout << "Therefore, current player ALWAYS wins, since they only have one spot to make a move on and it's their turn.\n";
-            } else {
-                cerr << "However, current player WILL NOT ALWAYS win, since there are more than 1 empty spots "
-                        "on the field. Thus, if they decide to place a " + stateToString(otherPlayer) +
-                        "on any other spot but the given, they won't win on this turn.";
-            }
-            return;
-        } else if (currentPlayerWinSpots.size() > 1 && currentTurn == player) {
-            cout << "Current player ALWAYS wins, since they have more than 1 'win spots' and it's their turn.\n";
-        } else if (currentPlayerWinSpots.size() > 1 && currentTurn != player) {
-            if (otherPlayerWinSpots.empty()) {
-                cout << "Current player ALWAYS wins, since they have more than 1 'win spots' and the other player "
-                        "cannot win on the current turn.\n";
-            } else {
-                cerr << "Current player WILL NOT ALWAYS win. They do have more than 1 'win spots', but so do "
-                        "the other player, whose turn is the current. Thus, if the other player places a " +
-                        stateToString(otherPlayer) + " on any of the given spots: ";
-                for (auto &spot : otherPlayerWinSpots) {
-                    cerr << spot.toString() + " ";
-                }
-                cerr << "- they will win.";
-            }
-        }
-
+        auto emptySpotsQueue = toQueue(emptySpots);
+        performFillFieldUntilWinSpotIsFound(field, emptySpotsQueue, player, currentPlayer, winChainLength);
 
     }
 
@@ -199,7 +212,7 @@ public:
         vector<vector<TicTacToeFieldState>> field = {
                 {CROSS, ZERO,  ZERO   },  // X 0 0
                 {CROSS, CROSS, EMPTY  },  // X X -
-                {EMPTY, CROSS, ZERO   },  // - X 0
+                {EMPTY, EMPTY, ZERO   },  // - - 0
         };
         printField(field);
         calculateWinPossibility(field, CROSS, WIN_CHAIN_LENGTH);

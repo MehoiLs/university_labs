@@ -114,6 +114,27 @@ protected:
             cout << endl;
         }
     }
+    static void printFieldWithGivenPos(const vector<vector<TicTacToeFieldState>>& field,
+                                       const int x, const int y) {
+        if (field.size() > MAX_FIELD_OUTPUT_SIZE) {
+            cerr << "The field is too large to be displayed.";
+            cerr << "Maximum field size is " << MAX_FIELD_OUTPUT_SIZE << "x" << MAX_FIELD_OUTPUT_SIZE << endl;
+            return;
+        }
+        for (int i = 0; i < field.size(); ++i) {
+            for (int j = 0; j < field.size(); ++j) {
+                bool isGivenPos = (i == y && j == x);
+                if (field[i][j] == CROSS) {
+                    !isGivenPos ? cout << "X " : cout << "X<";
+                } else if (field[i][j] == ZERO) {
+                    !isGivenPos ? cout << "0 " : cout << "0<";
+                } else {
+                    !isGivenPos ? cout << "- " : cout << "-<";
+                }
+            }
+            cout << endl;
+        }
+    }
     static TicTacToeFieldState getCurrentTurn(const vector<vector<TicTacToeFieldState>>& field) {
         int countX = 0, count0 = 0;
         for (const auto &row : field) {

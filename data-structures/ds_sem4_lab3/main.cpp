@@ -10,7 +10,8 @@
  */
 int main() {
 //    TicTacToeWinPossibilityCalculator::createOwnFieldAndPerformCalculations();
-    TicTacToeWinPossibilityCalculator::tests();
+    //TicTacToeWinPossibilityCalculator::tests();
+    TicTacToeWinPossibilityCalculator::test2();
 
     return 0;
 }
