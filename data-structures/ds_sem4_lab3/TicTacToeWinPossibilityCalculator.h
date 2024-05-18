@@ -9,16 +9,14 @@ using TicTacToeFieldState::EMPTY;
 #include <queue>
 using std::queue;
 
-//TODO REMOVE
-#include <thread>
-#include <chrono>
-
 /** Реализация задачи.
  *
  * @author MehoiLs (Dorokhov Mikhail)
  */
 class TicTacToeWinPossibilityCalculator : private TicTacToeField {
 private:
+    static const bool LOGGING_ON = true; // флаг, показывающий, включено ли логирование
+
     /** Метод, проверяющий, является ли данная позиция выигрышной.
      *
      * @param field - игровое поле
@@ -97,6 +95,12 @@ private:
         return false;
     }
 
+    /** Метод, преобразующий вектор в очередь.
+     *
+     * @tparam T - тип элементов в векторе
+     * @param vec - вектор
+     * @return очередь
+     */
     template <typename T>
     static queue<T> toQueue(const vector<T>& vec) {
         queue<T> q;
@@ -106,52 +110,73 @@ private:
         return q;
     }
 
+    /** Метод, заполняющий игровое поле до тех пор, пока не будет найдена выигрышная позиция.
+     *
+     * @param field - игровое поле
+     * @param emptySpots - очередь пустых клеток
+     * @param targetPlayer - игрок, для которого осуществляется проверка
+     * @param currentPlayer - текущий игрок
+     * @param winChainLength - длина выигрышной комбинации
+     * @param foundLoseCase - флаг, показывающий, был ли найден случай, когда текущий игрок проигрывает
+     */
     static void performFillFieldUntilWinSpotIsFound(
             vector<vector<TicTacToeFieldState>> field,
             queue<Coordinates> emptySpots,
             const TicTacToeFieldState& targetPlayer,
             const TicTacToeFieldState& currentPlayer,
-            const int winChainLength
+            const int winChainLength,
+            bool &foundLoseCase
     ) {
         if (emptySpots.empty()) {
             return;
         }
 
+        /**
+         * Достаём первую пустую клетку из очереди и заполняем её текущим игроком.
+         * Затем высчитываем все оставшиеся пустые клетки и добавляем их в очередь.
+         */
         const auto pos = emptySpots.front();
         emptySpots.pop();
 
         field[pos.y][pos.x] = currentPlayer;
         const auto actualEmptySpots = toQueue(collectEmptySpots(field));
 
-        //TODO REMOVE 'sleep_for'
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        cerr << "Placing " << stateToString(currentPlayer) << " at (" << pos.x << ", " << pos.y << ")\n";
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-        printFieldWithGivenPos(field, pos.x, pos.y);
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-        cout << endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        if (LOGGING_ON) {
+            cerr << "Placing " << stateToString(currentPlayer) << " at (" << pos.x << ", " << pos.y << ")\n";
+            printFieldWithGivenPos(field, pos.x, pos.y);
+            cout << endl;
+        }
 
+        /**
+         * Проверяем, является ли данная позиция выигрышной.
+         * Если нет - помечаем `foundLoseCase` как true и продолжаем рекурсию.
+         *
+         * ПРИМЕЧАНИЕ: вообще, это можно использовать как терминальный шаг для рекурсии.
+         * Т.е. как только  `foundLoseCase` станет true, можно просто выйти из рекурсии
+         * (стоит добавить проверку в начало:
+         * @code
+         * if (foundLoseCase) return;
+         * @endcode)
+         * Но в данном случае, я решил оставить рекурсию, чтобы показать, что можно использовать
+         * рекурсию для поиска всех возможных вариантов.
+         */
         if (isGivenPosWinnable(field, currentPlayer, winChainLength, pos.x, pos.y)) {
             if (currentPlayer == targetPlayer) {
-                cout << "The player " << stateToString(targetPlayer) << " CAN WIN by filling the spot at (" << pos.x
+                if (LOGGING_ON) cout << "The player " << stateToString(targetPlayer) << " CAN WIN by filling the spot at (" << pos.x
                      << ", " << pos.y << ").\n\n";
             } else {
-                cerr << "The player " << stateToString(targetPlayer) << " WILL LOSE if the player "
+                if (LOGGING_ON) cerr << "The player " << stateToString(targetPlayer) << " WILL LOSE if the player "
                      << stateToString(currentPlayer) << " fills the spot at (" << pos.x << ", " << pos.y
                      << ").\n\n";
+                foundLoseCase = true;
             }
             field[pos.y][pos.x] = EMPTY;
 
-
-            //TODO I have to find out how do I handle terminating the recursion correctly here.
-            //  It does check all the empty spots, but it does not stop after finding all of them.
-            
             performFillFieldUntilWinSpotIsFound(field, emptySpots, targetPlayer,
-                                                currentPlayer, winChainLength);
+                                                currentPlayer, winChainLength, foundLoseCase);
         } else {
             performFillFieldUntilWinSpotIsFound(field, actualEmptySpots, targetPlayer,
-                                                getOtherPlayer(currentPlayer), winChainLength);
+                                                getOtherPlayer(currentPlayer), winChainLength, foundLoseCase);
         }
     }
 
@@ -162,9 +187,6 @@ private:
      * @param player - игрок, для которого осуществляется проверка
      * @param winChainLength - длина выигрышной комбинации
      */
-    //TODO - this have to be BACKTRACKING. Can it be considered as one rn?
-    //TODO Ремарка: возможно стоит прикрутить рекурсию к списку пустых позиций, последовательно эти позиции заполнять в поле
-    //  и проверять, является ли результат заполнения выигрышным для той или иной стороны.
     static void calculateWinPossibility(
             const vector<vector<TicTacToeFieldState>>& field,
             const TicTacToeFieldState& player,
@@ -174,7 +196,6 @@ private:
             cerr << "The game has been finished.\n";
             return;
         }
-        const auto otherPlayer = getOtherPlayer(player);
         const auto currentPlayer = getCurrentTurn(field);
         const auto emptySpots = collectEmptySpots(field);
         if (emptySpots.empty()) {
@@ -182,17 +203,35 @@ private:
             return;
         }
 
+        /**
+         * Перебор всех пустых клеток и заполнение их текущим игроком.
+         * Таким образом, мы создаём для рекурсии очередь с одним элементом (start-spot)
+         * и запускаем рекурсивный метод, который будет заполнять все оставшиеся клетки.
+         *
+         * @param foundLoseCase - флаг, показывающий, был ли найден случай, когда текущий игрок проигрывает
+         * */
+        bool foundLoseCase = false;
         auto emptySpotsQueue = toQueue(emptySpots);
-        performFillFieldUntilWinSpotIsFound(field, emptySpotsQueue, player, currentPlayer, winChainLength);
-//        for (int i = 0; i < emptySpots.size(); ++i) {
-//            performFillFieldUntilWinSpotIsFound(field, emptySpotsQueue, player, currentPlayer, winChainLength);
-//            emptySpotsQueue.pop();
-//        }
+        while(!emptySpotsQueue.empty()) {
+            auto cords = emptySpotsQueue.front();
+            auto q = queue<Coordinates>();
+            q.push(cords);
+            performFillFieldUntilWinSpotIsFound(field, q, player, currentPlayer, winChainLength, foundLoseCase);
+            emptySpotsQueue.pop();
+        }
+
+        if (foundLoseCase) {
+            cerr << "The player " << stateToString(player) << " has a possibility to lose.\n";
+        } else {
+            cout << "The player " << stateToString(player) << " always wins. \n";
+        }
     }
 
 public:
     static void tests() {
+        cout << "Running tests...\n" << "[TEST 1]: ";
         test1();
+        cout << "[TEST 2]: ";
         test2();
     }
     static void test1() {
@@ -204,20 +243,28 @@ public:
                 {CROSS, ZERO,   EMPTY,  EMPTY,  ZERO    },  // X 0 - - 0
                 {EMPTY, CROSS,  ZERO,   EMPTY,  ZERO    }   // - X X - 0
         };
-        printField(field);
+        if (LOGGING_ON) {
+            printField(field);
+        }
         calculateWinPossibility(field, CROSS, WIN_CHAIN_LENGTH);
     }
     static void test2() {
         const int WIN_CHAIN_LENGTH = 3;
         vector<vector<TicTacToeFieldState>> field = {
-                {CROSS, ZERO,  ZERO   },  // X 0 0
+                {CROSS, ZERO,  EMPTY  },  // X 0 -
                 {CROSS, CROSS, EMPTY  },  // X X -
-                {EMPTY, EMPTY, ZERO   },  // - - 0
+                {EMPTY, ZERO,  ZERO   },  // - 0 0
         };
-        printField(field);
+        if (LOGGING_ON) {
+            printField(field);
+        }
         calculateWinPossibility(field, CROSS, WIN_CHAIN_LENGTH);
     }
 
+    /**
+     * Метод, создающий игровое поле и запускающий анализ.
+     * Использовать для ручной проверки.
+     */
     static void createOwnFieldAndPerformCalculations() {
         auto fieldInfo = input();
         printField(fieldInfo.field);

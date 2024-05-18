@@ -27,6 +27,12 @@ struct Coordinates {
     std::string toString() const { return "{" + std::to_string(x) + "; " + std::to_string(y) + "}"; }
 };
 
+/**
+ * Структура, содержащая информацию о поле.
+ * Используется для передачи информации о поле между методами или классами.
+ *
+ * @author MehoiLs (Dorokhov Mikhail)
+ */
 struct FullFieldInfo {
     vector<vector<TicTacToeFieldState>> field;
     const int winChainLength;
@@ -38,7 +44,7 @@ constexpr TicTacToeFieldState FIRST_PLAYER = CROSS;
 constexpr TicTacToeFieldState SECOND_PLAYER = ZERO;
 static_assert(FIRST_PLAYER != SECOND_PLAYER && FIRST_PLAYER != EMPTY && SECOND_PLAYER != EMPTY);
 
-constexpr bool DISABLED_ASSERTION = false;
+constexpr bool DISABLED_ASSERTION = false; // Set to true to disable assertions of the field correctness
 
 /** Базовый класс Крестиков-Ноликов.
  * Содержит основную логику, необходимую для решения:
@@ -47,23 +53,48 @@ constexpr bool DISABLED_ASSERTION = false;
  * - получения текущей очереди
  * - подсчёт комбинация на горизонтали, вертикали и диагоналях
  * - ввод поля с клавиатуры
+ * - вывод поля на экран
  *
  * @author MehoiLs (Dorokhov Mikhail)
  */
 class TicTacToeField {
 protected:
     // Additional
+    /**
+     * Получить другого игрока.
+     *
+     * @param currentPlayer текущий игрок
+     * @return другой игрок
+     */
     static TicTacToeFieldState getOtherPlayer(TicTacToeFieldState currentPlayer) {
         return (currentPlayer == CROSS) ? ZERO : CROSS;
     }
+    /**
+     * Проверяет, находится ли данная позиция в пределах поля.
+     *
+     * @param x координата x
+     * @param y координата y
+     * @param fieldSize размер поля
+     * @return true, если позиция находится в пределах поля
+     */
     static bool isGivenPosWithinBounds(const int x, const int y, const int fieldSize) {
         return (x >= 0 && y >= 0 && x < fieldSize && y < fieldSize);
     }
+    /**
+     * Бросает исключение если позиция находится вне поля.
+     * @see isGivenPosWithinBounds
+     */
     static void assertSingleFieldEntry(const int x, const int y, const int fieldSize) {
         if (isGivenPosWithinBounds(x, y, fieldSize)) {
             throw std::invalid_argument("The field entry is out of bounds.");
         }
     }
+    /**
+     * Преобразует состояние поля в строку.
+     *
+     * @param state состояние поля
+     * @return строковое представление состояния поля
+     */
     static std::string stateToString(const TicTacToeFieldState state) {
         if (state == CROSS) {
             return "X";
@@ -74,9 +105,21 @@ protected:
         }
     }
     // Field
+    /**
+     * Создаёт поле заданного размера.
+     *
+     * @param fieldSize размер поля
+     * @return поле заданного размера
+     */
     static auto createField(const int fieldSize) {
         return vector<vector<TicTacToeFieldState>>(fieldSize, vector<TicTacToeFieldState>(fieldSize, EMPTY));
     }
+    /**
+     * Заполняет поле с клавиатуры.
+     *
+     * @param fieldSize размер поля
+     * @param field поле
+     */
     static void autoFillFromConsole(const int fieldSize, vector<vector<TicTacToeFieldState>>& field) {
         TicTacToeFieldState state;
         char c;
@@ -95,6 +138,11 @@ protected:
             }
         }
     }
+    /**
+     * Выводит поле на экран.
+     *
+     * @param field поле
+     */
     static void printField(const vector<vector<TicTacToeFieldState>>& field) {
         if (field.size() > MAX_FIELD_OUTPUT_SIZE) {
             cerr << "The field is too large to be displayed.";
@@ -114,6 +162,13 @@ protected:
             cout << endl;
         }
     }
+    /**
+     * Выводит поле на экран с выделенной позицией.
+     *
+     * @param field поле
+     * @param x координата x
+     * @param y координата y
+     */
     static void printFieldWithGivenPos(const vector<vector<TicTacToeFieldState>>& field,
                                        const int x, const int y) {
         if (field.size() > MAX_FIELD_OUTPUT_SIZE) {
@@ -135,6 +190,12 @@ protected:
             cout << endl;
         }
     }
+    /**
+     * Получает текущего игрока.
+     *
+     * @param field поле
+     * @return текущий игрок
+     */
     static TicTacToeFieldState getCurrentTurn(const vector<vector<TicTacToeFieldState>>& field) {
         int countX = 0, count0 = 0;
         for (const auto &row : field) {
@@ -153,6 +214,16 @@ protected:
             return SECOND_PLAYER;
         }
     }
+    /**
+     * Проверяет, является ли поле правильным
+     *
+     * @param field поле
+     * @param player текущий игрок
+     * @param x координата x
+     * @param y координата y
+     * @param winChainLength длина выигрышной цепочки
+     * @return true, если поле выигрышное
+     */
     static void assertFieldIsCorrect(const int countX, const int count0) {
         if (DISABLED_ASSERTION) return;
         if (FIRST_PLAYER == CROSS) {
@@ -284,6 +355,11 @@ protected:
     }
 
 public:
+    /**
+     * Ввод поля с клавиатуры.
+     *
+     * @return поле
+     */
     static FullFieldInfo input() {
         int fieldSize, winChainLength; // "N", "M"
         cerr << "We will consider that " <<  stateToString(FIRST_PLAYER)  << " is the first player and "
