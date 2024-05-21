@@ -12,7 +12,7 @@ using std::cout;
 
 extern bool isLoggingEnabled;
 
-template<typename Clazz>
+template<typename T>
 class Logger {
 private:
 
@@ -28,13 +28,13 @@ public:
 
     void log(const std::string& message) const {
         if (isLoggingEnabled) {
-            std::cout << getCurrentTime() << " " << typeid(Clazz).name() << ": " << message << std::endl;
+            std::cout << getCurrentTime() << " " << typeid(T).name() << ": " << message << std::endl;
         }
     }
 
     void error(const std::string& message) const {
         if (isLoggingEnabled) {
-            std::cerr << getCurrentTime() << " " << typeid(Clazz).name() << ": " << message << std::endl;
+            std::cerr << getCurrentTime() << " " << typeid(T).name() << ": " << message << std::endl;
         }
     }
 };

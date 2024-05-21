@@ -10,7 +10,8 @@ using std::cout;
 using std::cerr;
 using std::vector;
 
-/** Тестирование класса `InclusionExclusionCalculator`
+/**
+ * Тестирование класса `InclusionExclusionCalculator`
  *
  * @author MehoiLs (Dorokhov Mikhail)
  * */
@@ -60,7 +61,9 @@ private:
         handleAssertion(isPassed, expected, actual, lineAt, testName);
     }
 
-    /** Тестирование метода `performComparison` */
+    /**
+     * Тестирование метода `performComparison`
+     */
     static void testCountNumbers() {
         static const string TEST_NAME = "\"testCountNumbers\"";
 
@@ -69,7 +72,9 @@ private:
     }
 
 public:
-    /** Запуск всех тестов */
+    /**
+     * Запуск всех тестов
+     */
     static void runTests() {
         testCountNumbers();
         cout << "\nFINISHED TESTING." << std::endl;

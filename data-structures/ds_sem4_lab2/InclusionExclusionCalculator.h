@@ -6,14 +6,16 @@
 
 using namespace std;
 
-/** Реализация задачи
+/**
+ * Реализация задачи
  *
  * @author MehoiLs (Dorokhov Mikhail)
  * */
 class InclusionExclusionCalculator {
 private:
-    /** Статический рекурсивный метод, подсчитывающий всевозможные комбинации,
-     *  и возвращающий их произведения.
+    /**
+     * Статический рекурсивный метод, подсчитывающий всевозможные комбинации,
+     * и возвращающий их произведения.
      *
      *  @param elements - вектор элементов, из которых составляются комбинации
      *  @param currentCombo - вектор для хранения текущей комбинации
@@ -46,7 +48,9 @@ private:
         return products;
     }
 
-    /** Обёрточный метод для `findAllProductsCombinations` */
+    /**
+     * Обёрточный метод для `findAllProductsCombinations`
+     */
     static vector<int> findAllProductsCombinations(const vector<int>& elements, int comboSize, int currentIndex = 0) {
         vector<int> current;
         return findAllProductsCombinations(elements, current, comboSize, currentIndex);
@@ -54,7 +58,8 @@ private:
 
 
 public:
-    /** Статический метод, выполняющий сравнение числа с заданными делителями.
+    /**
+     * Статический метод, выполняющий сравнение числа с заданными делителями.
      *
      * @param number - число, с которым производится сравнение
      * @param comparingDivisors - вектор делителей
@@ -85,7 +90,8 @@ public:
         return (number - result);
     }
 
-    /** Статический метод, выполняющий ввод данных и вывод результата.
+    /**
+     * Статический метод, выполняющий ввод данных и вывод результата.
      *
      * @return результат выполнения программы
      */
