@@ -57,5 +57,5 @@ while (!emptySpotsQueue.empty() →   && !foundLoseCase   ←) {
 при которой противоположная сторона выигрывает, а не проверять всевозможные кейсы.
 
 ### Пример работы программы
-![img_1.png](img_1.png)
-![img_2.png](img_2.png)
+![img_1.png](img/img_1.png)
+![img_2.png](img/img_2.png)
