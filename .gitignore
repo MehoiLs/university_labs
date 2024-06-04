@@ -2,3 +2,4 @@
 .idea/discord.xml
 cmake-build-*/
 cmake-build-debug
+main.exe
