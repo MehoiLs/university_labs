@@ -8,36 +8,29 @@ using std::cout;
 using std::cerr;
 
 #include <vector>
+#include <stack>
 using std::vector;
-#include <set>
+using std::stack;
+
 #include <algorithm>
 
-using std::set;
-
 constexpr static int CAPITAL = 0;
-
-enum Planet {
-    SELF,
-    TELEPORT,
-    NONE
-};
 
 class Empire {
 private:
     int planetsCount;
     int teleportsCount;
 
-    vector<vector<Planet>> empireGraph;
+    vector<vector<int>> empireGraph;
+    vector<vector<int>> transportedEmpireGraph;
 
-    static bool setContainsPlanet(const set<int>& planets, const int targetPlanet) {
-        return std::any_of(planets.begin(), planets.end(),
-                           [targetPlanet](int planet) { return planet == targetPlanet; });
-    }
-    static int toPlanet(int planet) {
-        return planet - 1;
-    }
     void placeTeleport(int a, int b) {
-        empireGraph[a-1][b-1] = TELEPORT;
+        empireGraph[a - 1][b - 1] = 1;
+        transportedEmpireGraph[b - 1][a - 1] = 1;
+    }
+    void init() {
+        this->empireGraph = vector<vector<int>>(planetsCount, vector<int>(planetsCount, 0));
+        this->transportedEmpireGraph = vector<vector<int>>(planetsCount, vector<int>(planetsCount, 0));
     }
     void validateFields() const {
         if (planetsCount < 2 || planetsCount > 105) {
@@ -47,60 +40,100 @@ private:
             throw std::invalid_argument("Teleports count must be at least 2 and at most 2*105");
         }
     }
-    static auto createGraph(const int size) {
-        return vector<vector<Planet>>(size, vector<Planet>(size, NONE));
-    }
 
-    bool isPlanetReachable(int planetFrom, const int targetPlanet, set<int>& visited) const {
-        visited.insert(planetFrom);
-        if (planetFrom == targetPlanet) {
-            return false;
-        }
-        if (empireGraph[planetFrom][targetPlanet] == TELEPORT) {
-            return true;
-        }
-        for (int planet = 0; planet < planetsCount; ++planet) {
-            if (planet == planetFrom || setContainsPlanet(visited, planet)) {
-                continue;
-            }
-            if (empireGraph[planetFrom][planet] == TELEPORT) {
-                return isPlanetReachable(planet, targetPlanet, visited);
+    /**
+     * Depth-first search for the main graph. It fills the stack with the topologicalOrder of vertices and also
+     * marks them as visited.
+     *
+     * @param currentPlanet - current vertex (planet)
+     * @param visited - vector of visited vertices (planets)
+     * @param topologicalOrder - stack of vertices (planets) in topological order
+     */
+    void topologicalSortDFS(int currentPlanet, vector<bool>& visited, stack<int>& topologicalOrder) const {
+        visited[currentPlanet] = true;
+        for (int planetTo = 0; planetTo < planetsCount; ++planetTo) {
+            if (empireGraph[currentPlanet][planetTo] && !visited[planetTo]) {
+                topologicalSortDFS(planetTo, visited, topologicalOrder);
             }
         }
-        return false;
-    }
-    [[nodiscard]] bool isPlanetReachable(int planetFrom, const int targetPlanet) const {
-        set<int> visited;
-        return isPlanetReachable(planetFrom, targetPlanet, visited);
+        topologicalOrder.push(currentPlanet);
     }
 
+    /**
+     * Depth-first search for the transported graph. It marks the vertices with the same componentColors if they are connected.
+     *
+     * @param currentPlanet - current vertex
+     * @param componentColors - vector of colors for each vertex
+     * @param currentComponent - current componentColors
+     */
+    void markSCComponentsDFS(int currentPlanet, vector<int>& componentColors, int currentComponent) const {
+        componentColors[currentPlanet] = currentComponent;
+        for (int planetTo = 0; planetTo < planetsCount; ++planetTo) {
+            if (transportedEmpireGraph[currentPlanet][planetTo] && componentColors[planetTo] == -1) {
+                markSCComponentsDFS(planetTo, componentColors, currentComponent);
+            }
+        }
+    }
+
+    /**
+     * Main function that performs the calculations.
+     * @return count of required teleports to build
+     */
     int performCalculations() {
-        set<int> unreachablePlanets;
-        for (int planet = 2; planet <= planetsCount; ++planet) {
-            if (!isPlanetReachable(CAPITAL, toPlanet(planet))) {
-                unreachablePlanets.insert(planet);
+        vector<bool> visitedPlanets(planetsCount, false);
+        stack<int> topologicalOrder;
+
+        // First DFS to build an order of traversal between planets
+        for (int planet = 0; planet < planetsCount; planet++) {
+            if (!visitedPlanets[planet]) {
+                topologicalSortDFS(planet, visitedPlanets, topologicalOrder);
             }
         }
-        if (unreachablePlanets.empty()) {
-            return 0;
+
+        vector<int> color(planetsCount, -1); // Stores the colors of the connected components
+        int currentComponent = 0;
+
+        // Second DFS to find the component
+        while (!topologicalOrder.empty()) {
+            int planet = topologicalOrder.top();
+            topologicalOrder.pop();
+            if (color[planet] == -1) {
+                markSCComponentsDFS(planet, color, currentComponent++);
+            }
         }
-        else {
-            recc(empireGraph, unreachablePlanets, {}, CAPITAL, 0);
+
+        vector<bool> isSourceComponent(currentComponent, true); // Stores the components that are sources
+        for (int i = 0; i < planetsCount; i++) {
+            for (int to = 0; to < planetsCount; ++to) {
+                if (empireGraph[i][to] && color[i] != color[to]) {
+                    isSourceComponent[color[to]] = false;
+                }
+            }
         }
-    }
-    int recc(vector<vector<Planet>> empire, set<int> unreachablePlanets, set<std::pair<int, int>> triedTeleports, int from, int count) {
-       //TODO might impl something like backtracking here, trying to place a teleport on each spot
+        isSourceComponent[color[CAPITAL]] = false; // The capital is not a source
+        int requiredTeleports = 0;
+        for (bool source : isSourceComponent) {
+            if (source) { // If the component is a source, then we need to build a teleport
+                requiredTeleports++;
+            }
+        }
+
+        return requiredTeleports;
     }
 
 public:
-    Empire() = default;
+    Empire(): planetsCount(2), teleportsCount(2) {
+        init();
+    }
     Empire(int planetsCount, int teleportsCount) {
-
         this->planetsCount = planetsCount;
         this->teleportsCount = teleportsCount;
-        empireGraph.resize(planetsCount);
-    };
+        init();
+    }
 
+    /**
+     * Manual input of planets and teleports count and teleports placement.
+     */
     void input() {
         int n, m;
         cout << "Enter the planets count (n) and teleports count (m): ";
@@ -109,6 +142,7 @@ public:
         this->planetsCount = n;
         this->teleportsCount = m;
         validateFields();
+        init();
 
         cout << "Place teleports, where 'ai' - planet from, 'bi' - planet to: ";
         int i = 0;
@@ -126,21 +160,23 @@ public:
             placeTeleport(a, b);
             i++;
         }
-        for (int j = 0; j < planetsCount; ++j) {
-            empireGraph[j][j] = SELF; // no teleport to itself
-        }
     }
+
+    /**
+     * Automatic test with predefined values, mentioned in the task.
+     */
     void test() {
         this->planetsCount = 6;
         this->teleportsCount = 4;
-        this->empireGraph = createGraph(planetsCount);
+        init();
 
         placeTeleport(3, 1);
         placeTeleport(4, 6);
         placeTeleport(1, 2);
         placeTeleport(4, 5);
 
-        performCalculations();
+        int result = performCalculations();
+        cout << "Required additional teleports: " << result << "\n";
     }
 };
 
