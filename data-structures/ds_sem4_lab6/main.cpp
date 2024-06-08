@@ -1,70 +1,64 @@
 #include <iostream>
-using std::cin;
-using std::cout;
-using std::cerr;
-using std::endl;
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
 
-#include <map>
-#include <cmath>
+using namespace std;
 
-using std::map;
+static unordered_map<int, int> memo;
 
-static map<int, int> numberToJoy;
+bool memoContains(int num) {
+    return memo.find(num) != memo.end();
+}
 
-int calculateJoy(int number, int degree) {
+int calculateJoy(int n, int k) {
     int sum = 0;
-    while (number > 0) {
-        auto digit = number % 10;
-        sum += pow(digit, degree);
-        number /= 10;
+    while (n > 0) {
+        int digit = n % 10;
+        int power = 1;
+        for (int i = 0; i < k; ++i) {
+            power *= digit;
+        }
+        sum += power;
+        n /= 10;
     }
-    numberToJoy[number] = sum;
     return sum;
 }
 
-int foo(const int targetNum, const int degree) {
-    if (numberToJoy[targetNum] != 0) {
-        return numberToJoy[targetNum]; // immediately return if we have already calculated this number
+int performCalculations(int number, int degree) {
+    if (memoContains(number)) {
+        return memo[number];
     }
-    // TODO finish the task, perform comparison, etc...
-}
 
-void performCalculations(int borderLeft, int borderRight, int degree) {
-    int sum = 0;
-    for (int num = borderLeft; num <= borderRight; num++) {
-        sum += foo(num, degree);
+    unordered_set<int> visited; // for managing cycles
+    vector<int> sequence; // n, S(n), S(S(n)), ...
+    int current = number;
+    while (visited.find(current) == visited.end()) { // if cycle is found
+        visited.insert(current);
+        sequence.push_back(current);
+
+        current = calculateJoy(current, degree);
     }
-    cout << sum << endl;
+
+    int minJoy = current;
+    for (const auto& num : sequence) {
+        minJoy = min(minJoy, num);
+    }
+    memo[number] = minJoy;
+    return minJoy;
 }
 
 int main() {
-    int borderLeft, borderRight, degree;
-    int entriesCount;
-
-    cout << "Please, enter the number of entries: ";
-    cin >> entriesCount;
-
-    while (entriesCount--) {
-        cout << "Please, enter the left border, right border and the degree: ";
-        bool isInputValid = false;
-        while(!isInputValid) {
-            cin >> borderLeft >> borderRight >> degree;
-            if (borderLeft < 0 || borderRight < 0 || degree < 0) {
-                cerr << "All numbers must be positive!\n";
-                continue;
-            }
-            if (borderLeft > borderRight) {
-                cerr << "Left border must be less than right border!\n";
-                continue;
-            }
-            if (degree < 2) {
-                cerr << "Degree must be greater than 1!\n";
-                continue;
-            }
-            isInputValid = true;
+    int a, b, k;
+    while (cin >> a >> b >> k) {
+        if (a == b == k == 0) { // 0 0 0 for exiting program
+            break;
         }
-        performCalculations(borderLeft, borderRight, degree);
+        long long sumJoy = 0;
+        for (int i = a; i <= b; ++i) {
+            sumJoy += performCalculations(i, k);
+        }
+        cout << sumJoy << endl;
     }
-
     return 0;
 }
