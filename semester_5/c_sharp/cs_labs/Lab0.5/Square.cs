@@ -1,4 +1,4 @@
-﻿namespace cs_lab_0._5 
+﻿namespace Lab0_5 
 {
     /**
      * A square. Inheritor of [Figure]. 
@@ -32,6 +32,12 @@
         public override double CalculatePerimeter() 
         {
             return 4 * side;
+        }
+        
+        public override string ToString()
+        {
+            return $"Square (side = {side})" +
+                   $"(P = {CalculatePerimeter()})(S = {CalculateArea()})";
         }
         
     }

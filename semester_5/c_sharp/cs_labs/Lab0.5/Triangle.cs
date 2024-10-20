@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace cs_lab_0._5 
+namespace Lab0_5 
 {
     /**
      * A triangle. Inheritor of [Figure]. 
@@ -14,10 +14,12 @@ namespace cs_lab_0._5
             get => a;
             set
             {
-                if (value > 0)
+                if (value <= 0)
                 {
-                    a = value;
+                    throw new ArgumentException("a must be greater than 0.");
                 }
+                a = value;
+                AssertTriangle();
             }
         }
         
@@ -27,10 +29,12 @@ namespace cs_lab_0._5
             get => b;
             set
             {
-                if (value > 0)
+                if (value <= 0)
                 {
-                    b = value;
+                    throw new ArgumentException("b must be greater than 0.");
                 }
+                b = value;
+                AssertTriangle();
             }
         }
         
@@ -40,10 +44,12 @@ namespace cs_lab_0._5
             get => c;
             set
             {
-                if (value > 0)
+                if (value <= 0)
                 {
-                    c = value;
+                    throw new ArgumentException("c must be greater than 0.");
                 }
+                c = value;
+                AssertTriangle();
             }
         }
 
@@ -52,6 +58,7 @@ namespace cs_lab_0._5
             this.a = a;
             this.b = b;
             this.c = c;
+            AssertTriangle();
         }
 
         public override double CalculateArea() 
@@ -65,6 +72,20 @@ namespace cs_lab_0._5
         public override double CalculatePerimeter() 
         {
             return a + b + c;
+        }
+        
+        public override string ToString()
+        {
+            return $"Triangle (a = {a}; b = {b}; c = {c})" +
+                   $"(P = {CalculatePerimeter()})(S = {CalculateArea()}";
+        }
+
+        private void AssertTriangle()
+        {
+            if (a + b <= c || a + c <= b || b + c <= a)
+            {
+                throw new InvalidOperationException($"Triangle with given values (a={a}; b={b}; c={c}) cannot exist");
+            }
         }
         
     }

@@ -1,4 +1,4 @@
-﻿namespace cs_lab_0._5
+﻿namespace Lab0_5
 {
     internal static class Program
     {

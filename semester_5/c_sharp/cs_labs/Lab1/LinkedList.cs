@@ -24,7 +24,7 @@ namespace Lab1
         private Node head;
         private Node tail;
 
-        public void InsertFirst(T data)
+        private void InsertFirst(T data)
         {
             var newNode = new Node(data)
             {
@@ -44,7 +44,7 @@ namespace Lab1
             }
         }
 
-        public void InsertLast(T data)
+        private void InsertLast(T data)
         {
             var newNode = new Node(data)
             {
@@ -62,6 +62,22 @@ namespace Lab1
             }
 
             tail = newNode;
+        }
+
+        public void InsertFirst(params T[] items)
+        {
+            foreach (var item in items)
+            {
+                InsertFirst(item);
+            }
+        }
+        
+        public void InsertLast(params T[] items)
+        {
+            foreach (var item in items)
+            {
+                InsertLast(item);
+            }
         }
 
         public T RemoveFirst()
@@ -118,6 +134,19 @@ namespace Lab1
             return tail.Data;
         }
 
+        public bool IsEmpty()
+        {
+            return head == null && tail == null;
+        }
+
+        public void Clean()
+        {
+            while (!IsEmpty())
+            {
+                RemoveFirst();
+            }
+        }
+
         public override string ToString()
         {
             var str = "{ ";
@@ -125,7 +154,7 @@ namespace Lab1
             var iter = head;
             while (iter != null)
             {
-                str += iter.Data + " ";
+                str += iter.Data + "; ";
                 iter = iter.Next;
             }
 

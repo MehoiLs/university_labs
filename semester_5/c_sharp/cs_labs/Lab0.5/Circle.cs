@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace cs_lab_0._5 
+namespace Lab0_5 
 {
     /**
      * A circle. Inheritor of [Figure]. 
@@ -35,6 +35,11 @@ namespace cs_lab_0._5
         {
             return 2 * Math.PI * radius;
         }
-        
+
+        public override string ToString()
+        {
+            return $"Circle (radius = {radius})" +
+                   $"(P = {CalculatePerimeter()})(S = {CalculateArea()}).";
+        }
     }
 }
