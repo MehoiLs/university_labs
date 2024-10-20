@@ -40,6 +40,10 @@
         <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Card\Card.cs" />
+        <Compile Include="Card\CardExtensions.cs" />
+        <Compile Include="Card\CardRank.cs" />
+        <Compile Include="Card\CardSuit.cs" />
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>

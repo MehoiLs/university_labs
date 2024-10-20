@@ -1,0 +1,6 @@
+C:\Users\misha\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\bin\Debug\Lab3.exe
+C:\Users\misha\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\bin\Debug\Lab3.pdb
+C:\Users\misha\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\obj\Debug\Lab3.csproj.AssemblyReference.cache
+C:\Users\misha\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\obj\Debug\Lab3.csproj.CoreCompileInputs.cache
+C:\Users\misha\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\obj\Debug\Lab3.exe
+C:\Users\misha\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\obj\Debug\Lab3.pdb

@@ -2,4 +2,8 @@
 	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/BuildTool/MsbuildVersion/@EntryValue">1114112</s:Int64>
 	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/CustomBuildToolPath/@EntryValue">C:\Users\MehoiL\AppData\Local\Programs\Rider\tools\MSBuild\Current\Bin\MSBuild.exe</s:String>
 	
+	
+	
+	
+	
 	</wpf:ResourceDictionary>
