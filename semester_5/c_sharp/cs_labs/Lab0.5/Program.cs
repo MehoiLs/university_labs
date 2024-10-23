@@ -1,4 +1,6 @@
-﻿namespace Lab0_5
+﻿using System;
+
+namespace Lab0_5
 {
     internal static class Program
     {
@@ -15,7 +17,7 @@
 
         private static void Print(string text, params object[] args)
         {
-            System.Console.WriteLine(text, args);
+            Console.WriteLine(text, args);
         }
     }
 }

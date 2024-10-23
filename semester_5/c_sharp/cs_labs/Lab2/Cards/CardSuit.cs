@@ -1,4 +1,4 @@
-﻿namespace Lab2.card
+﻿namespace Lab2.Cards
 {
     public enum CardSuit
     {

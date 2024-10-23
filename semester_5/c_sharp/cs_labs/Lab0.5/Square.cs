@@ -7,10 +7,10 @@
     {
         
         private double side;
-        public double Side
+        public double Side 
         {
             get => side;
-            set
+            set //todo readonly!
             {
                 if (value > 0)
                 {

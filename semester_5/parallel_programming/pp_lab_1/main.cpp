@@ -9,7 +9,7 @@
 #define timestamp std::chrono::time_point<std::chrono::system_clock>&
 
 const int MAX_THREADS_COUNT = 8;
-const int PARTITION_ARRAY_SIZE = 100000;
+const int PARTITION_ARRAY_SIZE = 10000;
 
 /**
  * Default quick sort own implementation.
@@ -207,7 +207,7 @@ void testQuickSortMTImpl(const std::vector<int> &initArray) {
  * Main function.
  */
 int main() {
-    const int ARRAY_SIZE = 100000000; // 100.000.000
+    const int ARRAY_SIZE = 100000; // 100.000.000
     const int MIN_VAL = 0;
     const int MAX_VAL = 10000000; // 10.000.000
 

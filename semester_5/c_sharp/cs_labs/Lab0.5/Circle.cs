@@ -12,7 +12,7 @@ namespace Lab0_5
         public double Radius
         {
             get => radius;
-            set
+            set //todo readonly!
             {
                 if (value > 0)
                 {

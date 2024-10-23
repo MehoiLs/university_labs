@@ -40,10 +40,12 @@
         <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Card\Card.cs" />
-        <Compile Include="Card\CardExtensions.cs" />
-        <Compile Include="Card\CardRank.cs" />
-        <Compile Include="Card\CardSuit.cs" />
+        <Compile Include="Cards\Card.cs" />
+        <Compile Include="Cards\CardExtensions.cs" />
+        <Compile Include="Cards\CardRank.cs" />
+        <Compile Include="Cards\CardSuit.cs" />
+        <Compile Include="Cards\Tasks\Card21Game.cs" />
+        <Compile Include="Cards\Tasks\CardTasks.cs" />
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>

@@ -12,7 +12,7 @@ namespace Lab0_5
         public double A
         {
             get => a;
-            set
+            set //todo readonly!
             {
                 if (value <= 0)
                 {
@@ -27,7 +27,7 @@ namespace Lab0_5
         public double B
         {
             get => b;
-            set
+            set //todo readonly!
             {
                 if (value <= 0)
                 {
@@ -42,7 +42,7 @@ namespace Lab0_5
         public double C
         {
             get => c;
-            set
+            set //todo readonly!
             {
                 if (value <= 0)
                 {
@@ -58,7 +58,7 @@ namespace Lab0_5
             this.a = a;
             this.b = b;
             this.c = c;
-            AssertTriangle();
+            AssertTriangle(); //todo move up (assert before assigning)
         }
 
         public override double CalculateArea() 
@@ -81,7 +81,7 @@ namespace Lab0_5
         }
 
         private void AssertTriangle()
-        {
+        { //todo positive vals
             if (a + b <= c || a + c <= b || b + c <= a)
             {
                 throw new InvalidOperationException($"Triangle with given values (a={a}; b={b}; c={c}) cannot exist");

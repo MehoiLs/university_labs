@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 
 namespace Lab1
 {
@@ -13,9 +12,9 @@ namespace Lab1
 
             public Node(T data)
             {
-                this.Data = data;
-                this.Next = null;
-                this.Prev = null;
+                Data = data;
+                Next = null;
+                Prev = null;
             }
         }
         

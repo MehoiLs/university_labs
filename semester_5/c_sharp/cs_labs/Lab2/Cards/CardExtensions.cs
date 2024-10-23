@@ -1,4 +1,6 @@
-﻿namespace Lab2.card
+﻿using System.Collections.Generic;
+
+namespace Lab2.Cards
 {
     public static class CardExtensions
     {
@@ -13,6 +15,11 @@
                    && rank != CardRank.Three
                    && rank != CardRank.Four
                    && rank != CardRank.Five;
+        }
+
+        public static string UnfoldToString(this List<Card> list)
+        {
+            return string.Join(", ", list);
         }
     }
 }
