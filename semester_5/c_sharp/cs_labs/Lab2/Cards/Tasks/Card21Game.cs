@@ -77,15 +77,12 @@ namespace Lab2.Cards.Tasks
             switch (card.Rank)
             {
                 case CardRank.Six:
-                    return 6;
                 case CardRank.Seven:
-                    return 7;
                 case CardRank.Eight:
-                    return 8;
                 case CardRank.Nine:
-                    return 9;
                 case CardRank.Ten:
-                    return 10;
+                    return card.Rank.AsInt();
+                
                 case CardRank.Jack:
                     return 2;
                 case CardRank.Queen:

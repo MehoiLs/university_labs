@@ -23,7 +23,7 @@ namespace Lab2
         private static void Task0()
         {
             Console.WriteLine("\n\n\tTask №0");
-            Console.WriteLine("Sorting cards by given suit order and by rank ascending...");
+            Console.WriteLine("Sorting cards by given suit order and rank ascending...");
             var decks = Card.CreateOrderedDecks(
                 CardSuit.Clubs,
                 CardSuit.Diamonds,

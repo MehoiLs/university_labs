@@ -9,6 +9,11 @@ namespace Lab2.Cards
             return suit == CardSuit.Hearts || suit == CardSuit.Diamonds;
         }
 
+        public static int AsInt(this CardRank rank)
+        {
+            return (int)rank + 1;
+        }
+
         public static bool Is21Rank(this CardRank rank)
         {
             return rank != CardRank.Two 
