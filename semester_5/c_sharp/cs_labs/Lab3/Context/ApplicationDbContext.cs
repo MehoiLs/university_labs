@@ -4,35 +4,37 @@ using Lab3.Entity.Hotel.People;
 using Lab3.Entity.Hotel.Rooms;
 using Lab3.Entity.Hotel.Stays;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Lab3.Context;
 
 public class ApplicationDbContext : DbContext
 {
-    public DbSet<Hotel> Hotels { get; set; }
-    public DbSet<Entity.Hotel.Service> Services { get; set; }
+    private const string DbConnection = "Host=localhost;Database=vsu;Username=postgres;Password=postgres";
+    
+    public DbSet<Hotel> Hotels { get; init; }
+    public DbSet<Entity.Hotel.Service> Services { get; init; }
 
-    public DbSet<Room> Rooms { get; set; }
-    public DbSet<RoomFeature> RoomFeatures { get; set; }
-    public DbSet<RoomPriceRate> RoomPriceRates { get; set; }
-    public DbSet<RoomProperties> RoomProperties { get; set; }
+    public DbSet<Room> Rooms { get; init; }
+    public DbSet<RoomFeature> RoomFeatures { get; init; }
+    public DbSet<RoomPriceRate> RoomPriceRates { get; init; }
+    public DbSet<RoomProperties> RoomProperties { get; init; }
 
-    public DbSet<Staying> Stayings { get; set; }
-    public DbSet<Booking> Bookings { get; set; }
+    public DbSet<Staying> Stayings { get; init; }
+    public DbSet<Booking> Bookings { get; init; }
 
-    public DbSet<Client> Clients { get; set; }
-    public DbSet<Employee> Employees { get; set; }
-    public DbSet<Occupation> Occupations { get; set; }
-    public DbSet<Owner> Owners { get; set; }
+    public DbSet<Client> Clients { get; init; }
+    public DbSet<Employee> Employees { get; init; }
+    public DbSet<Occupation> Occupations { get; init; }
+    public DbSet<Owner> Owners { get; init; }
 
-    public DbSet<Fee> Fees { get; set; }
-    public DbSet<Invoice> Invoices { get; set; }
-    public DbSet<LivingInvoice> LivingInvoices { get; set; }
-    public DbSet<ServiceInvoice> ServiceInvoices { get; set; }
+    public DbSet<Fee> Fees { get; init; }
+    public DbSet<Invoice> Invoices { get; init; }
+    public DbSet<LivingInvoice> LivingInvoices { get; init; }
+    public DbSet<ServiceInvoice> ServiceInvoices { get; init; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+        => modelBuilder.ConfigureDependentEntities();
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-            optionsBuilder.UseNpgsql("Host=localhost;Database=vsu;Username=postgres;Password=postgres");
-    }
+        => optionsBuilder.UseNpgsql(DbConnection);
 }

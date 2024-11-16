@@ -15,16 +15,11 @@ public class HotelService : IHotelService
 
     public Hotel Create(Hotel hotel)
     {
-        hotel = _hotelRepository.Create(hotel);
-        return Ctx.Hotels
-            .Include(h => h.Owner)
-            .First(h => h.Id == hotel.Id);
+        return _hotelRepository.Create(hotel);
     }
 
     public Hotel GetById(long id)
     {
-        // TODO: find out how to handle one-to-many relationship
-        //todo      ^ load "owner" entity upon getById request, instead of "null"
         //todo      + use viewModels       
         return _hotelRepository.GetById(id);
     }

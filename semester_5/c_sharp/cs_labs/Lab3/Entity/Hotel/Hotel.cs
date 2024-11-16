@@ -1,21 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Lab3.Entity.Hotel.People;
+﻿using Lab3.Entity.Hotel.People;
 
 namespace Lab3.Entity.Hotel;
 
 public class Hotel
 {
     public long Id { get; set; }
-    public required string Name { get; set; }
-    public required string Address { get; set; }
-    public required string Email { get; set; }
-    public required string Phone { get; set; }
-    public required string YearOpenedIn { get; set; }
+    public string Name { get; set; }
+    public string Address { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+    public string YearOpenedIn { get; set; }
     public double Area { get; set; }
 
     //  Owner-to-Hotels (One-to-Many)
-    [Required]
     public long OwnerId { get; set; }
-    public Owner Owner { get; set; } = null!;
+    public Owner? Owner { get; set; }
 }

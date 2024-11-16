@@ -1,4 +1,6 @@
-﻿namespace Lab3.Entity.Hotel.People;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Lab3.Entity.Hotel.People;
 
 public class Owner
 {
