@@ -1,4 +1,4 @@
-using Lab3.Data.Extensions;
+using Lab3.Extensions;
 
 namespace Lab3;
 

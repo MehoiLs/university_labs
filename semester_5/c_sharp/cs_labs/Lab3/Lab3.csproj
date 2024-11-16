@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Service\"/>
+        <Folder Include="Migrations\" />
     </ItemGroup>
 
 </Project>
