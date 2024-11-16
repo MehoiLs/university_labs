@@ -4,8 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lab3.Data.Context;
 
-public class HotelContext(DbContextOptions<HotelContext> options) : DefaultDbContext<HotelContext>(options)
+public class HotelContext : DefaultDbContext
 {
     public DbSet<Hotel> Hotels { get; set; }
-    public DbSet<Service> Services { get; set; }
+    public DbSet<Entities.Hotel.Service> Services { get; set; }
+
 }

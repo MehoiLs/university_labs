@@ -18,6 +18,11 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0-rc.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Service\"/>
     </ItemGroup>
 
 </Project>

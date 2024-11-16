@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lab3.Data.Context;
 
-public class HotelRoomContext(DbContextOptions<HotelRoomContext> options) : DefaultDbContext<HotelRoomContext>(options)
+public class HotelRoomContext : DefaultDbContext
 {
     public DbSet<Room> Rooms { get; set; }
     public DbSet<RoomFeature> RoomFeatures { get; set; }

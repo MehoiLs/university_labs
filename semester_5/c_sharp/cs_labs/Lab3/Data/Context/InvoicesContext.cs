@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lab3.Data.Context;
 
-public class InvoicesContext(DbContextOptions<InvoicesContext> options) : DefaultDbContext<InvoicesContext>(options)
+public class InvoicesContext : DefaultDbContext
 {
     public DbSet<Fee> Fees { get; set; }
     public DbSet<Invoice> Invoices { get; set; }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lab3.Data.Context;
 
-public class PeopleContext(DbContextOptions<PeopleContext> options) : DefaultDbContext<PeopleContext>(options)
+public class PeopleContext : DefaultDbContext
 {
     public DbSet<Client> Clients { get; set; }
     public DbSet<Employee> Employees { get; set; }

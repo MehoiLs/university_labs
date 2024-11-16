@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lab3.Data.Context;
 
-public class StaysContext(DbContextOptions<StaysContext> options) : DefaultDbContext<StaysContext>(options)
+public class StaysContext : DefaultDbContext
 {
     public DbSet<Staying> Stayings { get; set; }
     public DbSet<Booking> Bookings { get; set; }
