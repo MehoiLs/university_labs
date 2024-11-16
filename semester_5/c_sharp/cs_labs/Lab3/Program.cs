@@ -22,6 +22,11 @@ public static class Program
         builder.Services.AddDbContext<ApplicationDbContext>();
         builder.Services.AddServices();
         builder.Services.AddControllers();
+        
+        builder.Services.AddControllersWithViews()
+            .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

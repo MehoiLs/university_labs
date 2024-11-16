@@ -30,17 +30,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Invoice> Invoices { get; set; }
     public DbSet<LivingInvoice> LivingInvoices { get; set; }
     public DbSet<ServiceInvoice> ServiceInvoices { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Hotel>()
-            .HasOne(h => h.Owner)
-            .WithMany(o => o.Hotels)
-            .HasForeignKey(h => h.OwnerId);
-        
-        base.OnModelCreating(modelBuilder);
-    }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)

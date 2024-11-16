@@ -15,7 +15,10 @@ public class HotelService : IHotelService
 
     public Hotel Create(Hotel hotel)
     {
-        return _hotelRepository.Create(hotel);
+        hotel = _hotelRepository.Create(hotel);
+        return Ctx.Hotels
+            .Include(h => h.Owner)
+            .First(h => h.Id == hotel.Id);
     }
 
     public Hotel GetById(long id)

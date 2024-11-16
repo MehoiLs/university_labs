@@ -152,3 +152,7 @@ C:\Users\mehoil\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3
 C:\Users\mehoil\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\mehoil\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\mehoil\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\obj\Debug\net8.0\Lab3.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\MehoiL\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\bin\Debug\net8.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\MehoiL\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\MehoiL\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\MehoiL\Documents\GitHub\university_labs\semester_5\c_sharp\cs_labs\Lab3\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
