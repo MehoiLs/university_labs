@@ -12,7 +12,7 @@ public class ApplicationDbContext : DbContext
     private const string DbConnection = "Host=localhost;Database=vsu;Username=postgres;Password=postgres";
 
     public DbSet<Hotel> Hotels { get; init; }
-    public DbSet<Entity.Hotel.Service> Services { get; init; }
+    public DbSet<Entity.Hotel.HotelOffering> Services { get; init; }
 
     public DbSet<Room> Rooms { get; init; }
     public DbSet<RoomFeature> RoomFeatures { get; init; }
@@ -31,9 +31,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Invoice> Invoices { get; init; }
     public DbSet<LivingInvoice> LivingInvoices { get; init; }
     public DbSet<ServiceInvoice> ServiceInvoices { get; init; }
-
-    // protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //     => modelBuilder.ConfigureDependentEntities();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

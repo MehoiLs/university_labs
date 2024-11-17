@@ -1,14 +1,13 @@
 ﻿using Lab3.Exception;
 
-namespace Lab3.Repository;
+namespace Lab3.Extensions;
 
 public static class RepositoryExtensions
 {
     
     public static T FirstOrThrow<T>(this IQueryable<T> source, Func<T, bool> predicate)
     {
-        var result = source.FirstOrDefault(predicate) ?? throw new NotFoundException();
-        return result;
+        return FirstOrThrow(source, predicate, new NotFoundException());
     }
     public static T FirstOrThrow<T>(this IQueryable<T> source, Func<T, bool> predicate, System.Exception exception)
     {

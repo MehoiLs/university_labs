@@ -13,6 +13,20 @@ namespace Lab3.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Occupations",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Salary = table.Column<long>(type: "bigint", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Occupations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Owners",
                 columns: table => new
                 {
@@ -87,46 +101,54 @@ namespace Lab3.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HotelService",
+                name: "Employees",
                 columns: table => new
                 {
-                    HotelsId = table.Column<long>(type: "bigint", nullable: false),
-                    ServicesId = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FullName = table.Column<string>(type: "text", nullable: false),
+                    Passport = table.Column<string>(type: "text", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    HotelId = table.Column<long>(type: "bigint", nullable: false),
+                    OccupationId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HotelService", x => new { x.HotelsId, x.ServicesId });
+                    table.PrimaryKey("PK_Employees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HotelService_Hotels_HotelsId",
-                        column: x => x.HotelsId,
+                        name: "FK_Employees_Hotels_HotelId",
+                        column: x => x.HotelId,
                         principalTable: "Hotels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_HotelService_Services_ServicesId",
-                        column: x => x.ServicesId,
-                        principalTable: "Services",
+                        name: "FK_Employees_Occupations_OccupationId",
+                        column: x => x.OccupationId,
+                        principalTable: "Occupations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Occupations",
+                name: "HotelHotelOffering",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Salary = table.Column<long>(type: "bigint", nullable: false),
-                    HotelId = table.Column<long>(type: "bigint", nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false)
+                    HotelsId = table.Column<long>(type: "bigint", nullable: false),
+                    OfferingsId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Occupations", x => x.Id);
+                    table.PrimaryKey("PK_HotelHotelOffering", x => new { x.HotelsId, x.OfferingsId });
                     table.ForeignKey(
-                        name: "FK_Occupations_Hotels_HotelId",
-                        column: x => x.HotelId,
+                        name: "FK_HotelHotelOffering_Hotels_HotelsId",
+                        column: x => x.HotelsId,
                         principalTable: "Hotels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_HotelHotelOffering_Services_OfferingsId",
+                        column: x => x.OfferingsId,
+                        principalTable: "Services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -193,28 +215,6 @@ namespace Lab3.Migrations
                         name: "FK_Fees_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Employees",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FullName = table.Column<string>(type: "text", nullable: false),
-                    Passport = table.Column<string>(type: "text", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    OccupationId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Employees_Occupations_OccupationId",
-                        column: x => x.OccupationId,
-                        principalTable: "Occupations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -364,7 +364,7 @@ namespace Lab3.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceServiceInvoice",
+                name: "HotelOfferingServiceInvoice",
                 columns: table => new
                 {
                     InvoicesId = table.Column<long>(type: "bigint", nullable: false),
@@ -372,15 +372,15 @@ namespace Lab3.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceServiceInvoice", x => new { x.InvoicesId, x.ServicesId });
+                    table.PrimaryKey("PK_HotelOfferingServiceInvoice", x => new { x.InvoicesId, x.ServicesId });
                     table.ForeignKey(
-                        name: "FK_ServiceServiceInvoice_Invoices_InvoicesId",
+                        name: "FK_HotelOfferingServiceInvoice_Invoices_InvoicesId",
                         column: x => x.InvoicesId,
                         principalTable: "Invoices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ServiceServiceInvoice_Services_ServicesId",
+                        name: "FK_HotelOfferingServiceInvoice_Services_ServicesId",
                         column: x => x.ServicesId,
                         principalTable: "Services",
                         principalColumn: "Id",
@@ -398,6 +398,11 @@ namespace Lab3.Migrations
                 column: "HotelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Employees_HotelId",
+                table: "Employees",
+                column: "HotelId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Employees_OccupationId",
                 table: "Employees",
                 column: "OccupationId");
@@ -408,14 +413,19 @@ namespace Lab3.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HotelHotelOffering_OfferingsId",
+                table: "HotelHotelOffering",
+                column: "OfferingsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HotelOfferingServiceInvoice_ServicesId",
+                table: "HotelOfferingServiceInvoice",
+                column: "ServicesId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Hotels_OwnerId",
                 table: "Hotels",
                 column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_HotelService_ServicesId",
-                table: "HotelService",
-                column: "ServicesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_ClientId",
@@ -426,11 +436,6 @@ namespace Lab3.Migrations
                 name: "IX_Invoices_StayingId",
                 table: "Invoices",
                 column: "StayingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Occupations_HotelId",
-                table: "Occupations",
-                column: "HotelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoomFeatureRoomProperties_PropertiesId",
@@ -458,11 +463,6 @@ namespace Lab3.Migrations
                 column: "PropertiesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceServiceInvoice_ServicesId",
-                table: "ServiceServiceInvoice",
-                column: "ServicesId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Stayings_ClientId",
                 table: "Stayings",
                 column: "ClientId");
@@ -483,7 +483,10 @@ namespace Lab3.Migrations
                 name: "Fees");
 
             migrationBuilder.DropTable(
-                name: "HotelService");
+                name: "HotelHotelOffering");
+
+            migrationBuilder.DropTable(
+                name: "HotelOfferingServiceInvoice");
 
             migrationBuilder.DropTable(
                 name: "RoomFeatureRoomProperties");
@@ -492,13 +495,7 @@ namespace Lab3.Migrations
                 name: "RoomPriceRates");
 
             migrationBuilder.DropTable(
-                name: "ServiceServiceInvoice");
-
-            migrationBuilder.DropTable(
                 name: "Occupations");
-
-            migrationBuilder.DropTable(
-                name: "RoomFeatures");
 
             migrationBuilder.DropTable(
                 name: "Invoices");
@@ -507,16 +504,19 @@ namespace Lab3.Migrations
                 name: "Services");
 
             migrationBuilder.DropTable(
-                name: "Bookings");
+                name: "RoomFeatures");
 
             migrationBuilder.DropTable(
                 name: "Stayings");
 
             migrationBuilder.DropTable(
-                name: "Clients");
+                name: "Bookings");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
+
+            migrationBuilder.DropTable(
+                name: "Clients");
 
             migrationBuilder.DropTable(
                 name: "RoomProperties");

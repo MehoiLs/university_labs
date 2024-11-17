@@ -8,5 +8,5 @@ public class Owner
     public required string FullName { get; set; }
 
     //  Hotels-to-Owner (Many-to-One)
-    public ICollection<Hotel> Hotels { get; } = new List<Hotel>();
+    public ICollection<Hotel> Hotels { get; set; }
 }

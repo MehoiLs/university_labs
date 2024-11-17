@@ -14,7 +14,7 @@ public class Hotel
 
     //  Owner-to-Hotels (One-to-Many)
     public long OwnerId { get; set; }
-    public Owner? Owner { get; set; }
+    public Owner Owner { get; set; }
 
-    public ICollection<Service> Services { get; set; } = new List<Service>();
+    public ICollection<HotelOffering>? Offerings { get; set; } = new List<HotelOffering>();
 }

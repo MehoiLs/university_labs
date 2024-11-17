@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lab3.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241117181843_Initial")]
+    [Migration("20241117192617_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,19 +25,34 @@ namespace Lab3.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("HotelService", b =>
+            modelBuilder.Entity("HotelHotelOffering", b =>
                 {
                     b.Property<long>("HotelsId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("OfferingsId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("HotelsId", "OfferingsId");
+
+                    b.HasIndex("OfferingsId");
+
+                    b.ToTable("HotelHotelOffering");
+                });
+
+            modelBuilder.Entity("HotelOfferingServiceInvoice", b =>
+                {
+                    b.Property<long>("InvoicesId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("ServicesId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("HotelsId", "ServicesId");
+                    b.HasKey("InvoicesId", "ServicesId");
 
                     b.HasIndex("ServicesId");
 
-                    b.ToTable("HotelService");
+                    b.ToTable("HotelOfferingServiceInvoice");
                 });
 
             modelBuilder.Entity("Lab3.Entity.Hotel.Hotel", b =>
@@ -78,6 +93,30 @@ namespace Lab3.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Hotels");
+                });
+
+            modelBuilder.Entity("Lab3.Entity.Hotel.HotelOffering", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<double>("AveragePrice")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("Lab3.Entity.Hotel.Invoices.Fee", b =>
@@ -184,6 +223,9 @@ namespace Lab3.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<long>("HotelId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("OccupationId")
                         .HasColumnType("bigint");
 
@@ -192,6 +234,8 @@ namespace Lab3.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
 
                     b.HasIndex("OccupationId");
 
@@ -206,9 +250,6 @@ namespace Lab3.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("HotelId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("Salary")
                         .HasColumnType("bigint");
 
@@ -216,8 +257,6 @@ namespace Lab3.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HotelId");
 
                     b.ToTable("Occupations");
                 });
@@ -336,30 +375,6 @@ namespace Lab3.Migrations
                     b.ToTable("RoomProperties");
                 });
 
-            modelBuilder.Entity("Lab3.Entity.Hotel.Service", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<double>("AveragePrice")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Services");
-                });
-
             modelBuilder.Entity("Lab3.Entity.Hotel.Stays.Booking", b =>
                 {
                     b.Property<long>("Id")
@@ -434,21 +449,6 @@ namespace Lab3.Migrations
                     b.ToTable("RoomFeatureRoomProperties");
                 });
 
-            modelBuilder.Entity("ServiceServiceInvoice", b =>
-                {
-                    b.Property<long>("InvoicesId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ServicesId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("InvoicesId", "ServicesId");
-
-                    b.HasIndex("ServicesId");
-
-                    b.ToTable("ServiceServiceInvoice");
-                });
-
             modelBuilder.Entity("Lab3.Entity.Hotel.Invoices.LivingInvoice", b =>
                 {
                     b.HasBaseType("Lab3.Entity.Hotel.Invoices.Invoice");
@@ -468,7 +468,7 @@ namespace Lab3.Migrations
                     b.HasDiscriminator().HasValue("ServiceInvoice");
                 });
 
-            modelBuilder.Entity("HotelService", b =>
+            modelBuilder.Entity("HotelHotelOffering", b =>
                 {
                     b.HasOne("Lab3.Entity.Hotel.Hotel", null)
                         .WithMany()
@@ -476,7 +476,22 @@ namespace Lab3.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Lab3.Entity.Hotel.Service", null)
+                    b.HasOne("Lab3.Entity.Hotel.HotelOffering", null)
+                        .WithMany()
+                        .HasForeignKey("OfferingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HotelOfferingServiceInvoice", b =>
+                {
+                    b.HasOne("Lab3.Entity.Hotel.Invoices.ServiceInvoice", null)
+                        .WithMany()
+                        .HasForeignKey("InvoicesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lab3.Entity.Hotel.HotelOffering", null)
                         .WithMany()
                         .HasForeignKey("ServicesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -529,24 +544,21 @@ namespace Lab3.Migrations
 
             modelBuilder.Entity("Lab3.Entity.Hotel.People.Employee", b =>
                 {
-                    b.HasOne("Lab3.Entity.Hotel.People.Occupation", "Occupation")
-                        .WithMany()
-                        .HasForeignKey("OccupationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Occupation");
-                });
-
-            modelBuilder.Entity("Lab3.Entity.Hotel.People.Occupation", b =>
-                {
                     b.HasOne("Lab3.Entity.Hotel.Hotel", "Hotel")
                         .WithMany()
                         .HasForeignKey("HotelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Lab3.Entity.Hotel.People.Occupation", "Occupation")
+                        .WithMany()
+                        .HasForeignKey("OccupationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Hotel");
+
+                    b.Navigation("Occupation");
                 });
 
             modelBuilder.Entity("Lab3.Entity.Hotel.Rooms.Room", b =>
@@ -630,21 +642,6 @@ namespace Lab3.Migrations
                     b.HasOne("Lab3.Entity.Hotel.Rooms.RoomProperties", null)
                         .WithMany()
                         .HasForeignKey("PropertiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ServiceServiceInvoice", b =>
-                {
-                    b.HasOne("Lab3.Entity.Hotel.Invoices.ServiceInvoice", null)
-                        .WithMany()
-                        .HasForeignKey("InvoicesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Lab3.Entity.Hotel.Service", null)
-                        .WithMany()
-                        .HasForeignKey("ServicesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

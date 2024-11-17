@@ -2,7 +2,7 @@
 
 namespace Lab3.Entity.Hotel;
 
-public class Service
+public class HotelOffering
 {
     public long Id { get; set; }
     public string Name { get; set; }

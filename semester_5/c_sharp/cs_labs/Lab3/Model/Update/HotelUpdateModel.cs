@@ -21,4 +21,6 @@ public class HotelUpdateModel
 
     [Range(1, long.MaxValue, ErrorMessage = "OwnerId must be greater that 0.")]
     public required long OwnerId { get; set; }
+    
+    public List<long>? OfferingIds { get; set; } = null!;
 }

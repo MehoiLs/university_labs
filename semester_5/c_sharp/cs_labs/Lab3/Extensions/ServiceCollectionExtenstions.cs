@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped(typeof(IGeneralRepository<>), typeof(GeneralRepository<>));
         services.AddScoped<IHotelService, HotelService>();
         services.AddScoped<IOwnerService, OwnerService>();
+        services.AddScoped<IHotelOfferingService, HotelOfferingService>();
 
         return services;
     }

@@ -10,6 +10,11 @@ public class GeneralRepository<T>(ApplicationDbContext ctx) : IGeneralRepository
 {
     private readonly DbSet<T> _dbSet = ctx.Set<T>();
 
+    public bool ExistsById(long id)
+    {
+        return _dbSet.Find(id) != null;
+    }
+
     public IEnumerable<T> GetAll()
     {
         return _dbSet.ToList();

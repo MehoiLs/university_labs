@@ -1,5 +1,7 @@
 ﻿using Lab3.Entity.Hotel.People;
 using Lab3.Exception;
+using Lab3.Model.Create;
+using Lab3.Model.Update;
 using Lab3.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,16 +26,16 @@ public class OwnerController(IOwnerService ownerService) : ControllerBase
 
     // TODO: viewModel?
     [HttpPost]
-    public ActionResult<Owner> CreateOwner([FromBody] Owner owner)
+    public ActionResult<Owner> CreateOwner([FromBody] OwnerCreateModel model)
     {
-        var created = ownerService.Create(owner);
+        var created = ownerService.Create(model);
         return Ok(created);
     }
 
     [HttpPut]
-    public ActionResult<Owner> UpdateOwner([FromBody] Owner owner)
+    public ActionResult<Owner> UpdateOwner([FromBody] OwnerUpdateModel model)
     {
-        var updated = ownerService.Update(owner);
+        var updated = ownerService.Update(model);
         return Ok(updated);
     }
 

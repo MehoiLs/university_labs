@@ -4,6 +4,7 @@ namespace Lab3.Repository;
 
 public interface IGeneralRepository<T> where T : class
 {
+    bool ExistsById(long id);
     IEnumerable<T> GetAll();
     T GetById(long id);
     void Create(T entity);

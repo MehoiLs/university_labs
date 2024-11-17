@@ -1,19 +1,26 @@
 ﻿using System.Data.Entity;
 using Lab3.Entity.Hotel.People;
+using Lab3.Extensions;
+using Lab3.Mapper;
+using Lab3.Model.Create;
+using Lab3.Model.Update;
+using Lab3.Model.View;
 using Lab3.Repository;
 
 namespace Lab3.Service.Impl;
 
 public class OwnerService(IGeneralRepository<Owner> repository) : IOwnerService
 {
-    public Owner Create(Owner owner)
+    public OwnerViewModel Create(OwnerCreateModel model)
     {
+        var owner = OwnerMapper.ToEntity(model);
         repository.Create(owner);
         return GetById(owner.Id);
     }
 
-    public Owner Update(Owner owner)
+    public OwnerViewModel Update(OwnerUpdateModel model)
     {
+        var owner = OwnerMapper.ToEntity(model);
         repository.Update(owner);
         return GetById(owner.Id);
     }
@@ -23,15 +30,16 @@ public class OwnerService(IGeneralRepository<Owner> repository) : IOwnerService
         repository.DeleteById(id);
     }
 
-    public Owner GetById(long id)
+    public OwnerViewModel GetById(long id)
     {
-        return repository.GetEntitySet()
+        var owner = repository.GetEntitySet()
             .Include(o => o.Hotels)
             .FirstOrThrow(o => o.Id == id);
+        return OwnerMapper.ToModel(owner);
     }
 
-    public List<Owner> GetAll()
+    public List<OwnerViewModel> GetAll()
     {
-        return [..repository.GetAll()];
+        return [..repository.GetAll().Select(OwnerMapper.ToPartialModel)];
     }
 }

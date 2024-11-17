@@ -1,14 +1,15 @@
 ﻿using Lab3.Entity.Hotel;
 using Lab3.Model.Create;
 using Lab3.Model.Update;
+using Lab3.Model.View;
 
 namespace Lab3.Service;
 
 public interface IHotelService
 {
-    public Hotel Create(HotelCreateModel model);
-    public Hotel Update(HotelUpdateModel model);
+    public HotelViewModel Create(HotelCreateModel model);
+    public HotelViewModel Update(HotelUpdateModel model);
     public void DeleteById(long id);
-    public Hotel GetById(long id);
-    public List<Hotel> GetAll();
+    public HotelViewModel GetById(long id);
+    public List<HotelViewModel> GetAll();
 }
