@@ -12,16 +12,8 @@ public class OwnerController(IOwnerService ownerService) : ControllerBase
     [HttpGet("{id:long}")]
     public ActionResult<Owner> GetOwnerById(long id)
     {
-        // TODO: something like controller advice?
-        try
-        {
-            var owner = ownerService.GetById(id);
-            return Ok(owner);
-        }
-        catch (NotFoundException e)
-        {
-            return NotFound(e.Message);
-        }
+        var owner = ownerService.GetById(id);
+        return Ok(owner);
     }
 
     [HttpGet]
@@ -41,15 +33,8 @@ public class OwnerController(IOwnerService ownerService) : ControllerBase
     [HttpPut]
     public ActionResult<Owner> UpdateOwner([FromBody] Owner owner)
     {
-        try
-        {
-            var updated = ownerService.Update(owner);
-            return Ok(updated);
-        }
-        catch (NotFoundException e)
-        {
-            return NotFound(e.Message);
-        }
+        var updated = ownerService.Update(owner);
+        return Ok(updated);
     }
 
     [HttpDelete("{id:long}")]

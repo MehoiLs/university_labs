@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lab3.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241117170431_Initial")]
+    [Migration("20241117181843_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -70,9 +70,8 @@ namespace Lab3.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("YearOpenedIn")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<DateTime>("YearOpenedIn")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 

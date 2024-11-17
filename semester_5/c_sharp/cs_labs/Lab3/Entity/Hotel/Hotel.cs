@@ -9,7 +9,7 @@ public class Hotel
     public string Address { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
-    public string YearOpenedIn { get; set; }
+    public DateTime YearOpenedIn { get; set; }
     public double Area { get; set; }
 
     //  Owner-to-Hotels (One-to-Many)

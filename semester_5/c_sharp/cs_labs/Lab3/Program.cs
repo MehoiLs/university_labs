@@ -1,4 +1,5 @@
 using Lab3.Context;
+using Lab3.Exception.Filter;
 using Lab3.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +22,7 @@ public static class Program
 
         builder.Services.AddDbContext<ApplicationDbContext>();
         builder.Services.AddServices();
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
         
         builder.Services.AddControllersWithViews()
             .AddNewtonsoftJson(options =>

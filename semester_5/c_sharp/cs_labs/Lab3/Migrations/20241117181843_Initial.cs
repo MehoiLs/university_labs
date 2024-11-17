@@ -50,7 +50,7 @@ namespace Lab3.Migrations
                     Address = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Phone = table.Column<string>(type: "text", nullable: false),
-                    YearOpenedIn = table.Column<string>(type: "text", nullable: false),
+                    YearOpenedIn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Area = table.Column<double>(type: "double precision", nullable: false),
                     OwnerId = table.Column<long>(type: "bigint", nullable: false)
                 },

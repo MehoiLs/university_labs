@@ -4,7 +4,7 @@ namespace Lab3.Context;
 
 public static class DbContextExtensions
 {
-    public static void ConfigureDependentEntities(this ModelBuilder modelBuilder)
+    public static void ConfigureDependentEntities(this ModelBuilder mb)
     {
         // modelBuilder.Entity<Hotel>()
         //     .Navigation(h => h.Owner)

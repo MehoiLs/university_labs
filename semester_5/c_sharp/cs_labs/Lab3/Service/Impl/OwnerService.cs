@@ -27,7 +27,7 @@ public class OwnerService(IGeneralRepository<Owner> repository) : IOwnerService
     {
         return repository.GetEntitySet()
             .Include(o => o.Hotels)
-            .First(o => o.Id == id);
+            .FirstOrThrow(o => o.Id == id);
     }
 
     public List<Owner> GetAll()
