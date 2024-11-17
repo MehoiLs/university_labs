@@ -2,5 +2,5 @@
 
 public class ServiceInvoice : Invoice
 {
-    public List<Service> Services { get; set; }
+    public ICollection<Service> Services { get; set; } = new List<Service>();
 }

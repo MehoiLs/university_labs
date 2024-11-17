@@ -9,6 +9,6 @@ public class Staying
     public DateTime CheckedInAt { get; set; }
     public DateTime CheckedOutAt { get; set; }
 
-    public required Client Client { get; set; }
-    public required Room Room { get; set; }
+    public Client Client { get; set; }
+    public Room Room { get; set; }
 }

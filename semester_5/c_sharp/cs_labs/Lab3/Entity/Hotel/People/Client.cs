@@ -3,8 +3,8 @@
 public class Client
 {
     public long Id { get; set; }
-    public required string FullName { get; set; }
-    public required string Passport { get; set; }
+    public string FullName { get; set; }
+    public string Passport { get; set; }
 
-    public required Hotel Hotel { get; set; }
+    public Hotel Hotel { get; set; }
 }

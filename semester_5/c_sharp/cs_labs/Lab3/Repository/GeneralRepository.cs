@@ -1,10 +1,11 @@
-﻿using Lab3.Exception;
+﻿using Lab3.Context;
+using Lab3.Exception;
 using Microsoft.EntityFrameworkCore;
 using EntityState = Microsoft.EntityFrameworkCore.EntityState;
 
 namespace Lab3.Repository;
 
-public class GeneralRepository<T>(DbContext ctx)
+public class GeneralRepository<T>(ApplicationDbContext ctx) : IGeneralRepository<T>
     where T : class
 {
     private readonly DbSet<T> _dbSet = ctx.Set<T>();
@@ -45,5 +46,10 @@ public class GeneralRepository<T>(DbContext ctx)
         _dbSet.Remove(entity);
 
         ctx.SaveChanges();
+    }
+
+    public DbSet<T> GetEntitySet()
+    {
+        return _dbSet;
     }
 }

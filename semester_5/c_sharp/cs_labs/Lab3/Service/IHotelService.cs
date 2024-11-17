@@ -7,6 +7,7 @@ public interface IHotelService
 {
     public Hotel Create(Hotel hotel);
     public Hotel GetById(long id);
+    public List<Hotel> GetAll();
 
 
     public Owner CreateOwner(Owner owner);

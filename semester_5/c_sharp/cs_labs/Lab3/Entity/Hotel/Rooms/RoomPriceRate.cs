@@ -7,5 +7,5 @@ public class RoomPriceRate
     public DateTime StartDate { get; set; }
 
     //todo: must be a unique constraint
-    public required RoomProperties Properties { get; set; }
+    public RoomProperties Properties { get; set; }
 }

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\MehoiL\\Documents\\GitHub\\university_labs\\semester_5\\c_sharp\\cs_labs\\Lab3\\Lab3.csproj": {}
+    "C:\\Users\\mehoil\\Documents\\GitHub\\university_labs\\semester_5\\c_sharp\\cs_labs\\Lab3\\Lab3.csproj": {}
   },
   "projects": {
-    "C:\\Users\\MehoiL\\Documents\\GitHub\\university_labs\\semester_5\\c_sharp\\cs_labs\\Lab3\\Lab3.csproj": {
+    "C:\\Users\\mehoil\\Documents\\GitHub\\university_labs\\semester_5\\c_sharp\\cs_labs\\Lab3\\Lab3.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\MehoiL\\Documents\\GitHub\\university_labs\\semester_5\\c_sharp\\cs_labs\\Lab3\\Lab3.csproj",
+        "projectUniqueName": "C:\\Users\\mehoil\\Documents\\GitHub\\university_labs\\semester_5\\c_sharp\\cs_labs\\Lab3\\Lab3.csproj",
         "projectName": "Lab3",
-        "projectPath": "C:\\Users\\MehoiL\\Documents\\GitHub\\university_labs\\semester_5\\c_sharp\\cs_labs\\Lab3\\Lab3.csproj",
-        "packagesPath": "C:\\Users\\MehoiL\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\MehoiL\\Documents\\GitHub\\university_labs\\semester_5\\c_sharp\\cs_labs\\Lab3\\obj\\",
+        "projectPath": "C:\\Users\\mehoil\\Documents\\GitHub\\university_labs\\semester_5\\c_sharp\\cs_labs\\Lab3\\Lab3.csproj",
+        "packagesPath": "C:\\Users\\mehoil\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mehoil\\Documents\\GitHub\\university_labs\\semester_5\\c_sharp\\cs_labs\\Lab3\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\MehoiL\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\mehoil\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -95,7 +95,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Users\\MehoiL\\.dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

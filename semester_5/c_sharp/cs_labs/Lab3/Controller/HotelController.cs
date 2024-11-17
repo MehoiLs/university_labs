@@ -25,6 +25,12 @@ public class HotelController(IHotelService hotelService) : ControllerBase
         }
     }
 
+    [HttpGet]
+    public ActionResult<Hotel> GetAllHotels()
+    {
+        return Ok(hotelService.GetAll());
+    }
+
     // TODO: viewModel?
     [HttpPost]
     public ActionResult<Hotel> CreateHotel([FromBody] Hotel hotel)
