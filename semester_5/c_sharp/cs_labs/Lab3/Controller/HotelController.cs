@@ -1,5 +1,4 @@
 ﻿using Lab3.Entity.Hotel;
-using Lab3.Entity.Hotel.People;
 using Lab3.Exception;
 using Lab3.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -39,14 +38,13 @@ public class HotelController(IHotelService hotelService) : ControllerBase
         return Ok(created);
     }
 
-
-    [HttpGet("/api/owner/{id:long}")]
-    public ActionResult<Owner> GetOwnerById(long id)
+    [HttpPut]
+    public ActionResult<Hotel> UpdateHotel([FromBody] Hotel hotel)
     {
         try
         {
-            var owner = hotelService.GetOwnerById(id);
-            return Ok(owner);
+            var updated = hotelService.Update(hotel);
+            return Ok(updated);
         }
         catch (NotFoundException e)
         {
@@ -54,10 +52,10 @@ public class HotelController(IHotelService hotelService) : ControllerBase
         }
     }
 
-    [HttpPost("/api/owner")]
-    public ActionResult<Owner> CreateOwner([FromBody] Owner owner)
+    [HttpDelete("/{id:long}")]
+    public NoContentResult DeleteHotel(long id)
     {
-        var created = hotelService.CreateOwner(owner);
-        return Ok(created);
+        hotelService.DeleteById(id);
+        return NoContent();
     }
 }

@@ -10,7 +10,7 @@ namespace Lab3.Context;
 public class ApplicationDbContext : DbContext
 {
     private const string DbConnection = "Host=localhost;Database=vsu;Username=postgres;Password=postgres";
-    
+
     public DbSet<Hotel> Hotels { get; init; }
     public DbSet<Entity.Hotel.Service> Services { get; init; }
 
@@ -32,9 +32,11 @@ public class ApplicationDbContext : DbContext
     public DbSet<LivingInvoice> LivingInvoices { get; init; }
     public DbSet<ServiceInvoice> ServiceInvoices { get; init; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-        => modelBuilder.ConfigureDependentEntities();
+    // protected override void OnModelCreating(ModelBuilder modelBuilder)
+    //     => modelBuilder.ConfigureDependentEntities();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(DbConnection);
+    {
+        optionsBuilder.UseNpgsql(DbConnection);
+    }
 }

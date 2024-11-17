@@ -20,16 +20,15 @@ public class GeneralRepository<T>(ApplicationDbContext ctx) : IGeneralRepository
         return _dbSet.Find(id) ?? throw new NotFoundException();
     }
 
-    public T Create(T entity)
+    public void Create(T entity)
     {
         ArgumentNullException.ThrowIfNull(entity);
         _dbSet.Add(entity);
 
         ctx.SaveChanges();
-        return entity;
     }
 
-    public T Update(T entity)
+    public void Update(T entity)
     {
         ArgumentNullException.ThrowIfNull(entity);
         _dbSet.Attach(entity);
@@ -37,10 +36,9 @@ public class GeneralRepository<T>(ApplicationDbContext ctx) : IGeneralRepository
         entry.State = EntityState.Modified;
 
         ctx.SaveChanges();
-        return entity;
     }
 
-    public void Delete(long id)
+    public void DeleteById(long id)
     {
         var entity = _dbSet.Find(id) ?? throw new NotFoundException();
         _dbSet.Remove(entity);

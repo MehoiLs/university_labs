@@ -6,9 +6,9 @@ public interface IGeneralRepository<T> where T : class
 {
     IEnumerable<T> GetAll();
     T GetById(long id);
-    T Create(T entity);
-    T Update(T entity);
-    void Delete(long id);
+    void Create(T entity);
+    void Update(T entity);
+    void DeleteById(long id);
 
     DbSet<T> GetEntitySet();
 }
