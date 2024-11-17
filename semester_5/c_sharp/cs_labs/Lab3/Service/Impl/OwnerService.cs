@@ -1,4 +1,4 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 using Lab3.Entity.Hotel.People;
 using Lab3.Extensions;
 using Lab3.Mapper;

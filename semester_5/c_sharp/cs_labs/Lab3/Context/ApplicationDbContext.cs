@@ -3,6 +3,7 @@ using Lab3.Entity.Hotel.Invoices;
 using Lab3.Entity.Hotel.People;
 using Lab3.Entity.Hotel.Rooms;
 using Lab3.Entity.Hotel.Stays;
+using Lab3.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lab3.Context;
