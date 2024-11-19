@@ -14,9 +14,27 @@ namespace Lab3.Service.Impl;
 public class HotelService(
     IGeneralRepository<Owner> ownerRepository,
     IGeneralRepository<Hotel> hotelRepository,
-    IGeneralRepository<HotelOffering> offeringRepository
+    IGeneralRepository<HotelOffering> offeringRepository,
+    IGeneralRepository<HotelKeyCard> keyCardRepository
 ) : IHotelService
 {
+    public KeyCardViewModel IssueKeyCard(long hotelId)
+    {
+        var keyCard = new HotelKeyCard
+        {
+            HotelId = hotelId
+        };
+        keyCardRepository.Create(keyCard);
+        return new KeyCardViewModel(); // TODO: keycard mapper to view model
+    }
+
+    public void AssignKeyCard(KeyCardAssignModel model)
+    {
+        throw new NotImplementedException();
+    }
+    
+    // TODO: also implement client CRUD 
+
     public HotelViewModel Create(HotelCreateModel model)
     {
         if (!ownerRepository.ExistsById(model.OwnerId))

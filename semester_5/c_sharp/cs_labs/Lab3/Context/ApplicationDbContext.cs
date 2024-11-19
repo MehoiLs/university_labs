@@ -13,7 +13,9 @@ public class ApplicationDbContext : DbContext
     private const string DbConnection = "Host=localhost;Database=vsu;Username=postgres;Password=postgres";
 
     public DbSet<Hotel> Hotels { get; init; }
-    public DbSet<Entity.Hotel.HotelOffering> Services { get; init; }
+    public DbSet<HotelOffering> Services { get; init; }
+    
+    public DbSet<HotelKeyCard> KeyCards { get; init; }
 
     public DbSet<Room> Rooms { get; init; }
     public DbSet<RoomFeature> RoomFeatures { get; init; }

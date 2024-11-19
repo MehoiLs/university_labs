@@ -52,4 +52,4 @@ namespace Lab2.Cards.Tasks
         }
         
     }
-}
+} 

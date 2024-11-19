@@ -17,4 +17,5 @@ public class Hotel
     public Owner Owner { get; set; } = null!;
 
     public ICollection<HotelOffering>? Offerings { get; set; } = new List<HotelOffering>();
+    public ICollection<HotelKeyCard>? KeyCards { get; set; } = new List<HotelKeyCard>();
 }
