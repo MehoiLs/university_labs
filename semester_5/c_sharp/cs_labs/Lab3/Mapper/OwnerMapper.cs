@@ -20,6 +20,7 @@ public static class OwnerMapper
     {
         return new Owner
         {
+            Id = model.Id,
             FullName = model.FullName
         };
     }
@@ -30,7 +31,7 @@ public static class OwnerMapper
         {
             Id = entity.Id,
             FullName = entity.FullName,
-            Hotels = entity.Hotels.Select(HotelMapper.ToPartialModel).ToList()
+            Hotels = entity.Hotels?.Select(HotelMapper.ToPartialModel).ToList()
         };
     }
 

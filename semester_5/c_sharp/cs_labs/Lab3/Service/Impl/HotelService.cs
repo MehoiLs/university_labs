@@ -25,12 +25,35 @@ public class HotelService(
             HotelId = hotelId
         };
         keyCardRepository.Create(keyCard);
-        return new KeyCardViewModel(); // TODO: keycard mapper to view model
+        return GetKeyCardById(keyCard.Id);
+    }
+
+    public List<KeyCardViewModel> GetAllKeyCards()
+    {
+        return [..keyCardRepository.GetAll().Select(KeyCardMapper.ToPartialModel)];
+    }
+
+    public KeyCardViewModel GetKeyCardById(long id)
+    {
+        var hotel = keyCardRepository.GetEntitySet()
+            .Include(kc => kc.Hotel)
+            .Include(kc => kc.Client)
+            .FirstOrThrow(h => h.Id == id);
+        return KeyCardMapper.ToModel(hotel);
     }
 
     public void AssignKeyCard(KeyCardAssignModel model)
     {
-        throw new NotImplementedException();
+        var keyCard = keyCardRepository.GetById(model.KeyCardId);
+        keyCard.ClientIt = model.ClientId;
+        keyCardRepository.Update(keyCard);
+    }
+
+    public void DeAssignKeyCard(long keyCardId)
+    {
+        var keyCard = keyCardRepository.GetById(keyCardId);
+        keyCard.ClientIt = null;
+        keyCardRepository.Update(keyCard);
     }
     
     // TODO: also implement client CRUD 

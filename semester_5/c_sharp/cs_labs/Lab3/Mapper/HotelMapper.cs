@@ -26,6 +26,7 @@ public static class HotelMapper
     {
         return new Hotel
         {
+            Id = model.Id,
             Name = model.Name,
             Address = model.Address,
             Email = model.Email,
