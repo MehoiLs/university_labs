@@ -13,6 +13,7 @@ namespace Lab3.Service.Impl;
 
 public class HotelService(
     IGeneralRepository<Owner> ownerRepository,
+    IGeneralRepository<Client> clientRepository,
     IGeneralRepository<Hotel> hotelRepository,
     IGeneralRepository<HotelOffering> offeringRepository,
     IGeneralRepository<HotelKeyCard> keyCardRepository
@@ -28,9 +29,11 @@ public class HotelService(
         return GetKeyCardById(keyCard.Id);
     }
 
-    public List<KeyCardViewModel> GetAllKeyCards()
+    public List<KeyCardViewModel> GetAllKeyCards(long hotelId)
     {
-        return [..keyCardRepository.GetAll().Select(KeyCardMapper.ToPartialModel)];
+        return [..keyCardRepository.GetAll()
+            .Where(k => k.HotelId == hotelId)
+            .Select(KeyCardMapper.ToPartialModel)];
     }
 
     public KeyCardViewModel GetKeyCardById(long id)
@@ -42,21 +45,29 @@ public class HotelService(
         return KeyCardMapper.ToModel(hotel);
     }
 
-    public void AssignKeyCard(KeyCardAssignModel model)
+    public void AssignKeyCard(long keyCardId, KeyCardAssignModel model)
     {
-        var keyCard = keyCardRepository.GetById(model.KeyCardId);
-        keyCard.ClientIt = model.ClientId;
+        var keyCard = keyCardRepository.GetById(keyCardId);
+        if (!clientRepository.ExistsById(model.ClientId))
+        {
+            throw new NotFoundException("Client not found");
+        }
+        keyCard.ClientId = model.ClientId;
         keyCardRepository.Update(keyCard);
     }
 
     public void DeAssignKeyCard(long keyCardId)
     {
         var keyCard = keyCardRepository.GetById(keyCardId);
-        keyCard.ClientIt = null;
+        keyCard.ClientId = null;
         keyCardRepository.Update(keyCard);
     }
-    
-    // TODO: also implement client CRUD 
+
+    public void DeleteKeyCard(long id)
+    {
+        keyCardRepository.DeleteById(id);
+    }
+
 
     public HotelViewModel Create(HotelCreateModel model)
     {

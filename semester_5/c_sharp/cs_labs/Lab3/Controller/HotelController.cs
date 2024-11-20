@@ -2,6 +2,7 @@
 using Lab3.Exception;
 using Lab3.Model.Create;
 using Lab3.Model.Update;
+using Lab3.Model.View;
 using Lab3.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,20 +13,21 @@ namespace Lab3.Controller;
 public class HotelController(IHotelService hotelService) : ControllerBase
 {
     [HttpGet("{id:long}")]
-    public ActionResult<Hotel> GetHotelById(long id)
+    public ActionResult<HotelViewModel> GetHotelById(long id)
     {
         var hotel = hotelService.GetById(id);
         return Ok(hotel);
     }
 
     [HttpGet]
-    public ActionResult<Hotel> GetAllHotels()
+    public ActionResult<HotelViewModel> GetAllHotels()
     {
-        return Ok(hotelService.GetAll());
+        var hotels = hotelService.GetAll();
+        return Ok(hotels);
     }
     
     [HttpPost]
-    public ActionResult<Hotel> CreateHotel([FromBody] HotelCreateModel model)
+    public ActionResult<HotelViewModel> CreateHotel([FromBody] HotelCreateModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -36,7 +38,7 @@ public class HotelController(IHotelService hotelService) : ControllerBase
     }
 
     [HttpPut]
-    public ActionResult<Hotel> UpdateHotel([FromBody] HotelUpdateModel model)
+    public ActionResult<HotelViewModel> UpdateHotel([FromBody] HotelUpdateModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -52,4 +54,5 @@ public class HotelController(IHotelService hotelService) : ControllerBase
         hotelService.DeleteById(id);
         return NoContent();
     }
+    
 }

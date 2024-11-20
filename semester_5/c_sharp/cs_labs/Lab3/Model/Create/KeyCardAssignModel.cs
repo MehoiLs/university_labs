@@ -2,6 +2,5 @@
 
 public class KeyCardAssignModel
 {
-    public required long KeyCardId { get; set; }
     public required long ClientId { get; set; }
 }

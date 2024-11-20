@@ -2,6 +2,7 @@
 using Lab3.Exception;
 using Lab3.Model.Create;
 using Lab3.Model.Update;
+using Lab3.Model.View;
 using Lab3.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,28 +13,27 @@ namespace Lab3.Controller;
 public class OwnerController(IOwnerService ownerService) : ControllerBase
 {
     [HttpGet("{id:long}")]
-    public ActionResult<Owner> GetOwnerById(long id)
+    public ActionResult<OwnerViewModel> GetOwnerById(long id)
     {
         var owner = ownerService.GetById(id);
         return Ok(owner);
     }
 
     [HttpGet]
-    public ActionResult<Owner> GetAllOwners()
+    public ActionResult<OwnerViewModel> GetAllOwners()
     {
         return Ok(ownerService.GetAll());
     }
-
-    // TODO: viewModel?
+    
     [HttpPost]
-    public ActionResult<Owner> CreateOwner([FromBody] OwnerCreateModel model)
+    public ActionResult<OwnerViewModel> CreateOwner([FromBody] OwnerCreateModel model)
     {
         var created = ownerService.Create(model);
         return Ok(created);
     }
 
     [HttpPut]
-    public ActionResult<Owner> UpdateOwner([FromBody] OwnerUpdateModel model)
+    public ActionResult<OwnerViewModel> UpdateOwner([FromBody] OwnerUpdateModel model)
     {
         var updated = ownerService.Update(model);
         return Ok(updated);

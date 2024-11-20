@@ -12,7 +12,9 @@ public static class ClientMapper
     {
         return new Client
         {
-            FullName = model.FullName
+            FullName = model.FullName,
+            Passport = model.Passport,
+            HotelId = model.HotelId
         };
     }
     
@@ -34,7 +36,7 @@ public static class ClientMapper
             FullName = entity.FullName,
             Passport = entity.Passport,
             Hotel = HotelMapper.ToPartialModel(entity.Hotel),
-            KeyCard = KeyCardMapper.ToPartialModel(entity.KeyCard)
+            KeyCard = entity.KeyCard != null ? KeyCardMapper.ToPartialModel(entity.KeyCard) : null
         };
     }
 

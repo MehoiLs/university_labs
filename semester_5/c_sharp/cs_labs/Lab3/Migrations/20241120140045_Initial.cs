@@ -220,6 +220,32 @@ namespace Lab3.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "KeyCards",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LastAssignedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ClientId = table.Column<long>(type: "bigint", nullable: true),
+                    HotelId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KeyCards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_KeyCards_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_KeyCards_Hotels_HotelId",
+                        column: x => x.HotelId,
+                        principalTable: "Hotels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RoomPriceRates",
                 columns: table => new
                 {
@@ -438,6 +464,17 @@ namespace Lab3.Migrations
                 column: "StayingId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_KeyCards_ClientId",
+                table: "KeyCards",
+                column: "ClientId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_KeyCards_HotelId",
+                table: "KeyCards",
+                column: "HotelId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RoomFeatureRoomProperties_PropertiesId",
                 table: "RoomFeatureRoomProperties",
                 column: "PropertiesId");
@@ -487,6 +524,9 @@ namespace Lab3.Migrations
 
             migrationBuilder.DropTable(
                 name: "HotelOfferingServiceInvoice");
+
+            migrationBuilder.DropTable(
+                name: "KeyCards");
 
             migrationBuilder.DropTable(
                 name: "RoomFeatureRoomProperties");

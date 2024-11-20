@@ -12,6 +12,8 @@ public class GlobalExceptionFilter : IExceptionFilter
         {
             NotFoundException e 
                 => CreateResult("Resource not found", StatusCodes.Status404NotFound, e),
+            DefaultException e
+                => CreateResult("Exception occured", StatusCodes.Status400BadRequest, e),
             ArgumentException e 
                 => CreateResult("Invalid argument", StatusCodes.Status400BadRequest, e),
             InvalidOperationException e 

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lab3.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241117201739_Initial")]
+    [Migration("20241120140045_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -93,6 +93,33 @@ namespace Lab3.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Hotels");
+                });
+
+            modelBuilder.Entity("Lab3.Entity.Hotel.HotelKeyCard", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("ClientId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("HotelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("LastAssignedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId")
+                        .IsUnique();
+
+                    b.HasIndex("HotelId");
+
+                    b.ToTable("KeyCards");
                 });
 
             modelBuilder.Entity("Lab3.Entity.Hotel.HotelOffering", b =>
@@ -509,6 +536,23 @@ namespace Lab3.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("Lab3.Entity.Hotel.HotelKeyCard", b =>
+                {
+                    b.HasOne("Lab3.Entity.Hotel.People.Client", "Client")
+                        .WithOne("KeyCard")
+                        .HasForeignKey("Lab3.Entity.Hotel.HotelKeyCard", "ClientId");
+
+                    b.HasOne("Lab3.Entity.Hotel.Hotel", "Hotel")
+                        .WithMany("KeyCards")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("Lab3.Entity.Hotel.Invoices.Fee", b =>
                 {
                     b.HasOne("Lab3.Entity.Hotel.People.Client", "Client")
@@ -655,6 +699,16 @@ namespace Lab3.Migrations
                         .IsRequired();
 
                     b.Navigation("Staying");
+                });
+
+            modelBuilder.Entity("Lab3.Entity.Hotel.Hotel", b =>
+                {
+                    b.Navigation("KeyCards");
+                });
+
+            modelBuilder.Entity("Lab3.Entity.Hotel.People.Client", b =>
+                {
+                    b.Navigation("KeyCard");
                 });
 
             modelBuilder.Entity("Lab3.Entity.Hotel.People.Owner", b =>

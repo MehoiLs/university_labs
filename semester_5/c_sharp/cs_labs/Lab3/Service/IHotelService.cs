@@ -8,10 +8,11 @@ namespace Lab3.Service;
 public interface IHotelService
 {
     public KeyCardViewModel IssueKeyCard(long hotelId);
-    public List<KeyCardViewModel> GetAllKeyCards();
+    public List<KeyCardViewModel> GetAllKeyCards(long hotelId);
     public KeyCardViewModel GetKeyCardById(long id);
-    public void AssignKeyCard(KeyCardAssignModel model);
+    public void AssignKeyCard(long keyCardId, KeyCardAssignModel model);
     public void DeAssignKeyCard(long keyCardId);
+    public void DeleteKeyCard(long id);
     
     public HotelViewModel Create(HotelCreateModel model);
     public HotelViewModel Update(HotelUpdateModel model);

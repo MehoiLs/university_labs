@@ -12,6 +12,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IHotelService, HotelService>();
         services.AddScoped<IOwnerService, OwnerService>();
         services.AddScoped<IHotelOfferingService, HotelOfferingService>();
+        services.AddScoped<IClientService, ClientService>();
 
         return services;
     }
