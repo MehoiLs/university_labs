@@ -4,6 +4,8 @@ namespace Lab3.Entity.Hotel;
 
 public class Hotel
 {
+    //TODO: constraints in db
+    //TODO: FILL DATABASE WITH MOCK-DATA!!!
     public long Id { get; set; }
     public string Name { get; set; }
     public string Address { get; set; }
