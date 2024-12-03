@@ -76,43 +76,108 @@ class Matrix {
         q[k] = a[k-1];
     }
 
-    // Solving
+    // // Solving
+    // void transformMainAndSubDiagonal() {
+    //
+    //     // TODO:
+    //     //  FIND OUT WHERE IF FAILS TO SYNC 'c' & 'q' INTERSECTION!!!
+    //
+    //     for (auto i = 0; i < size; i++) {
+    //         if (isIntersectionBPQ(i)) {
+    //             continue;
+    //         }
+    //         const auto coef = b[i];
+    //
+    //         // b & q - always match by indices
+    //         b[i] /= coef;
+    //         q[i] /= coef;
+    //         f[i] /= coef;
+    //
+    //         // a & c - always less than 'b' by length
+    //         if (i < size - 1) {
+    //             c[i] /= coef;
+    //             if (i == k - 2) {
+    //                 q[i] = c[i];
+    //             }
+    //             // we skip intersection, therefore on this pos 'a' was not transformed to 0.
+    //             if (i == k) {
+    //                 a[i-1] /= coef;
+    //                 q[i] = a[i-1];
+    //             }
+    //         }
+    //
+    //         // q[k-2] = c[k-2];
+    //         // q[k] = a[k-1];
+    //
+    //         print();
+    //         std::cout << std::endl;
+    //         // normalizing the sub-diagonal along to avoid any changes in 'b' later
+    //         if (i < size - 1 && i != k - 2) {
+    //             const auto coef2 = a[i];
+    //
+    //             a[i] -= b[i] * coef2;
+    //             b[i+1] -= c[i] * coef2;
+    //             q[i+1] -= q[i] * coef2;
+    //             f[i+1] -= f[i] * coef2;
+    //
+    //             // todo: sync c[k-2] & q[k-2]
+    //
+    //             // when 'q' is changed and intersects 'c'
+    //             // if (i + 1 == k - 2) {
+    //             //     c[i+1] = q[i+1];
+    //             // }
+    //         }
+    //         print();
+    //         std::cout << std::endl;
+    //     }
+    //     assertMatrixIntersections();
+    // }
+
     void transformMainAndSubDiagonal() {
-
-        // TODO:
-        //  FIND OUT WHERE IF FAILS TO SYNC 'c' & 'q' INTERSECTION!!!
-
-
         for (auto i = 0; i < size; i++) {
             if (isIntersectionBPQ(i)) {
                 continue;
             }
             const auto coef = b[i];
 
-            // b & q - always match by indices
-            b[i] /= coef;
+            b[i] = 1;
+            // b[i] /= coef;
             q[i] /= coef;
             f[i] /= coef;
 
-            // a & c - always less than 'b' by length
             if (i < size - 1) {
                 c[i] /= coef;
-                // we skip intersection, therefore on this pos 'a' was not transformed to 0.
-                if (i == k) {
-                    a[i-1] /= coef;
+
+                // 'p' & 'q' intersections
+                if (i == k - 2) {
+                    q[i] = c[i];
+                }
+                if (i == k - 1) {
+                    p[i+1] = c[i];
+                }
+            }
+            if (i > 0) {
+                a[i-1] /= coef;
+
+                // 'p' & 'q' intersections
+                if (i == k - 2) {
+                    p[i] = a[i];
+                }
+                if (i == k - 1) {
+                    q[i+1] = a[i];
                 }
             }
 
-            // normalizing the sub-diagonal along to avoid any changes in 'b' later
+            // sub
             if (i < size - 1 && i != k - 2) {
                 const auto coef2 = a[i];
 
-                a[i] -= b[i] * coef2;
+                // a[i] -= b[i] * coef2;
+                a[i] = +0.0;
                 b[i+1] -= c[i] * coef2;
                 q[i+1] -= q[i] * coef2;
                 f[i+1] -= f[i] * coef2;
 
-                // when 'q' is changed and intersects 'c'
                 if (i + 1 == k - 2) {
                     c[i+1] = q[i+1];
                 }
@@ -123,15 +188,20 @@ class Matrix {
 
     void transformUpperDiagonal() {
         assertNormalizedMainAndSubDiagonals();
-        for (auto i = 1; i < size; i++) {
+        for (int i = size - 1; i > 0; i--) {
             if (isIntersectionBPQ(i) || i == k) {
                 continue;
             }
             const auto coef = c[i-1];
 
-            c[i-1] -= coef * b[i];
+            c[i-1] = 0.0;
+            // c[i-1] -= coef * b[i];
             q[i-1] -= coef * q[i];
             f[i-1] -= coef * f[i];
+
+            if (i - 1 == k) {
+                a[i-2] = q[i-1];
+            }
         }
     }
 
@@ -143,12 +213,15 @@ class Matrix {
             }
             const auto coef = p[i];
 
-            p[i] -= coef * b[i];
+            p[i] = 0.0;
             f[k-1] -= coef * f[i];
+            p[k-1] = b[k-1] = q[k-1] -= coef * q[i];
         }
         // p[k-1] is always divided by itself in the end, therefore it always equals 1.
         f[k-1] /= p[k-1];
-        p[k-1] = q[k-1] = b[k-1] = 1;
+        p[k-1] = 1;
+        q[k-1] = 1;
+        b[k-1] = 1;
     }
 
     void transformColumnK() {
@@ -158,12 +231,17 @@ class Matrix {
                 continue;
             }
             const auto coef = q[i];
-            q[i] -= coef * q[k-1];
+
+            q[i] = 0;
             f[i] -= coef * f[k-1];
+
+            if (i == k - 2) {
+                c[i] = q[i];
+            }
+            if (i == k) {
+                a[i-1] = q[i];
+            }
         }
-        // 'c' & 'a' intersect 'q', therefore must be equal
-        c[k-2] = q[k-2];
-        a[k-1] = q[k];
     }
 
     public:
@@ -218,23 +296,33 @@ class Matrix {
         return f;
     }
 
-    matrixVector calculateVectorF(ldouble coef = 1) {
-        matrixVector _f(size);
+    static matrixVector calculateVectorF(
+        const size_t size,
+        const size_t k,
+        const ldouble coef,
+        const matrixVector &a,
+        const matrixVector &b,
+        const matrixVector &c,
+        const matrixVector &p,
+        const matrixVector &q
+    ) {
+        matrixVector f(size);
         for (auto i = 0; i < size; i++) {
             ldouble val = 0;
-            if (isIntersectionBPQ(i)) {
+            if (i == k - 1) {
                 for (const auto _p: p) {
                     val += _p * coef;
                 }
+                f[i] = val;
                 continue;
             }
             val += b[i] * coef + q[i] * coef;
             // 'a' must be within bounds and must not intersect with 'q' (k-1)
-            if (i > 0 && i != k - 1) {
+            if (i > 0 && i != k) {
                 val += a[i-1] * coef;
             }
             // 'c' must be within bounds and must not intersect with 'q' (k-2)
-            if (i < size - 1 && (k >= 2 && i != k - 2)) {
+            if (i < size - 1 && i != k - 2) {
                 val += c[i] * coef;
             }
             f[i] = val;
@@ -327,8 +415,40 @@ class Matrix {
         return new Matrix(size, k, a, b, c, p, q, f);
     }
 
+    static Matrix* generateRandomCalculatingF(const size_t size, const ldouble coef = 1) {
+        if (size <= 1) {
+            throw std::invalid_argument("The size must be greater than 1");
+        }
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution urd(-RANDOM_MIX_MAX, RANDOM_MIX_MAX);
+        std::uniform_int_distribution<size_t> uid(2, size - 1);
+
+        const size_t k = uid(gen);;
+        matrixVector a(size-1), b(size), c(size-1), p(size), q(size);
+
+        for (size_t i = 0; i < size; ++i) {
+            if (i < size - 1) {
+                a[i] = urd(gen);
+                c[i] = urd(gen);
+            }
+            b[i] = urd(gen);
+            p[i] = urd(gen);
+            q[i] = urd(gen);
+        }
+        forceOverride(k, a, b, c, p, q);
+        const auto matrix = new Matrix(size, k, a, b, c, p, q, {});
+        matrix->f = calculateVectorF(size, k, coef, a, b, c, p, q);
+        return matrix;
+    }
+
+    matrixVector getF() const {
+        return f;
+    }
+
     void print() const {
         std::cout << std::setprecision(3);
+        const auto debug_vec = calculateVectorF(size, k, 1, a, b, c, p, q);
         for (auto i = 0; i < size; i++) {
             for (auto j = 0; j < size; j++) {
                 // reached horizontal vector 'p'
@@ -345,7 +465,7 @@ class Matrix {
                     if (i == j && j == size - 1) {
                         break;
                     }
-                    std::cout<< round(c[j]) << "\t";
+                    std::cout << round(c[j]) << "\t";
                     j++; // double print
                 }
                 // 'q' (k-1) always matches with 'b' index
@@ -356,7 +476,9 @@ class Matrix {
                     std::cout << round(0.0) << "\t";
                 }
             }
-            std::cout << "| " << round(f[i]) << std::endl << std::endl;
+            std::cout << "| " << round(f[i]);
+            std::cout << " \t\t||| " << round(debug_vec[i]);
+            std::cout << std::endl << std::endl;
         }
     }
 

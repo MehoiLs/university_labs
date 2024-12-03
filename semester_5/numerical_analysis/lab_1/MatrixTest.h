@@ -12,22 +12,31 @@ class MatrixTest {
 
     static void performDefaultTests() {
 
-        const int SIZE_TEST_10 = 10;
+        const int SIZE_TEST_10 = 1000;
         for (int i = 0; i < 10; i++) {
-            const auto matrix = Matrix::generateRandom(SIZE_TEST_10);
-            auto solutionBySum = matrix->calculateVectorF();
-            auto solutionByAlgorithm = matrix->solveWithLogging();
-            printTwoVectorsAsColumns(solutionBySum, solutionByAlgorithm);
+            const auto matrix = Matrix::generateRandomCalculatingF(SIZE_TEST_10);
+            const auto solution = matrix->solve();
+            printVector(solution);
         }
 
     }
 
-    static void printTwoVectorsAsColumns(const matrixVector &a, const matrixVector &b) {
-        for (int i = 0; i < std::min(a.size(), b.size()); i++) {
-            std::cout << a[i] << "\t" << b[i] << std::endl;
+    static void printVector(const matrixVector& vec) {
+        for (const auto v : vec) {
+            std::cout << v << " ";
         }
-        std::cout << std::endl;
     }
+
+    // TODO: посчитать для кажд тестов 10 оцен точ, разделить на 10 (найти среднее) => добавить в отчет
+    // оценка точности для конкр матрицы
+    static ldouble calc(const matrixVector& solution) {
+        ldouble diff = 0;
+        for (const auto s : solution) {
+            diff = std::max(diff, std::abs(s - 1));
+        }
+        return diff;
+    }
+
 };
 
 #endif //MATRIXTEST_H
