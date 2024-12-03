@@ -54,7 +54,7 @@ class MatrixTest {
         allEntries.insert(allEntries.end(), entry3);
 
         // Test 4
-        auto entry4 = performTest(testNum++, SUB_TESTS_COUNT, 10, 10);
+        auto entry4 = performTest(testNum++, SUB_TESTS_COUNT, 100, 10);
         allEntries.insert(allEntries.end(), entry4);
 
         // Test 5
