@@ -33,7 +33,8 @@ public class HotelService(
     {
         return [..keyCardRepository.GetAll()
             .Where(k => k.HotelId == hotelId)
-            .Select(KeyCardMapper.ToPartialModel)];
+            .Select(KeyCardMapper.ToPartialModel)
+            .OrderBy(k => k.Id)];
     }
 
     public KeyCardViewModel GetKeyCardById(long id)
@@ -53,6 +54,7 @@ public class HotelService(
             throw new NotFoundException("Client not found");
         }
         keyCard.ClientId = model.ClientId;
+        keyCard.LastAssignedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
         keyCardRepository.Update(keyCard);
     }
 
@@ -113,7 +115,7 @@ public class HotelService(
 
     public List<HotelViewModel> GetAll()
     {
-        return [..hotelRepository.GetAll().Select(HotelMapper.ToPartialModel)];
+        return [..hotelRepository.GetAll().Select(HotelMapper.ToPartialModel).OrderBy(h => h.Id)];
     }
 
     private void HandleOfferings(Hotel hotel, List<long>? offeringIds)

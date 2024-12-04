@@ -1,10 +1,17 @@
-﻿namespace Lab3.Entity.Hotel.People;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Lab3.Entity.Hotel.People;
 
 public class Client
 {
+    [Key]
     public long Id { get; set; }
-    public string FullName { get; set; }
-    public string Passport { get; set; }
+    
+    [MinLength(2, ErrorMessage = "Min length of FullName must be 2")]
+    public required string FullName { get; set; }
+    
+    [RegularExpression("^[A-Za-z0-9]{6,15}$", ErrorMessage = "Invalid passport format.")]
+    public required string Passport { get; set; }
 
     public HotelKeyCard? KeyCard { get; set; }
     

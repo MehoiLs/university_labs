@@ -1,11 +1,18 @@
-﻿namespace Lab3.Entity.Hotel.Rooms;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Lab3.Entity.Hotel.Rooms;
 
 public class RoomPriceRate
 {
-    public long Id { get; set; }
-    public int PricePerNight { get; set; }
-    public DateTime StartDate { get; set; }
-
-    //todo: must be a unique constraint
-    public RoomProperties Properties { get; set; }
+    [Key]
+    public long Id { get; init; }
+    
+    [Range(1, double.MaxValue, ErrorMessage = "Price per night must be greater than 1.")]
+    public required int PricePerNight { get; init; }
+    
+    [Range(typeof(DateTime), "2024-01-01", "2100-12-31", ErrorMessage = "StartDate must be between 2024 and 2100.")]
+    public required DateTime StartDate { get; init; }
+    
+    
+    public required RoomProperties Properties { get; init; }
 }

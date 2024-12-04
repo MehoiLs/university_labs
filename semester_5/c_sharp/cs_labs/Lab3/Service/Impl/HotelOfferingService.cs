@@ -38,6 +38,6 @@ public class HotelOfferingService(
 
     public List<HotelOfferingViewModel> GetAll()
     {
-        return [..repository.GetAll().Select(HotelOfferingMapper.ToPartialModel)];
+        return [..repository.GetAll().Select(HotelOfferingMapper.ToPartialModel).OrderBy(o => o.Id)];
     }
 }

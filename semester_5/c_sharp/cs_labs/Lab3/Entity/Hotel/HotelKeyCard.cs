@@ -1,9 +1,11 @@
-﻿using Lab3.Entity.Hotel.People;
+﻿using System.ComponentModel.DataAnnotations;
+using Lab3.Entity.Hotel.People;
 
 namespace Lab3.Entity.Hotel;
 
 public class HotelKeyCard
 {
+    [Key]
     public long Id { get; set; }
     public DateTime? LastAssignedAt { get; set; }
     

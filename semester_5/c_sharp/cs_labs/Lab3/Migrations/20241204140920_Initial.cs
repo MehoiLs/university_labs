@@ -18,7 +18,7 @@ namespace Lab3.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Salary = table.Column<long>(type: "bigint", nullable: false),
+                    Salary = table.Column<long>(type: "bigint", maxLength: 100000, nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -45,8 +45,8 @@ namespace Lab3.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     AveragePrice = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
@@ -60,9 +60,9 @@ namespace Lab3.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Address = table.Column<string>(type: "text", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Phone = table.Column<string>(type: "text", nullable: false),
                     YearOpenedIn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Area = table.Column<double>(type: "double precision", nullable: false),

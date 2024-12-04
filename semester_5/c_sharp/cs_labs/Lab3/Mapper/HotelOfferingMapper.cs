@@ -22,6 +22,7 @@ public static class HotelOfferingMapper
     {
         return new HotelOffering
         {
+            Id = model.Id,
             Name = model.Name,
             Description = model.Description,
             AveragePrice = model.AveragePrice

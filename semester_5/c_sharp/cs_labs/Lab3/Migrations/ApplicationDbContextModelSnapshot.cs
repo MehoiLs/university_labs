@@ -62,18 +62,21 @@ namespace Lab3.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<double>("Area")
                         .HasColumnType("double precision");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<long>("OwnerId")
                         .HasColumnType("bigint");
@@ -132,11 +135,13 @@ namespace Lab3.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
@@ -275,6 +280,7 @@ namespace Lab3.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<long>("Salary")
+                        .HasMaxLength(100000)
                         .HasColumnType("bigint");
 
                     b.Property<int>("Type")
