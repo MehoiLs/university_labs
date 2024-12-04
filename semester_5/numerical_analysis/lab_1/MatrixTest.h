@@ -34,51 +34,8 @@ struct TestEntry {
 constexpr int SUB_TESTS_COUNT = 10;
 
 class MatrixTest {
-    public:
+    private:
 
-
-    static void performDefaultTests() {
-        std::list<TestEntry> allEntries;
-        int testNum = 1;
-
-        // Test 1
-        auto entry1 = performTest(testNum++, SUB_TESTS_COUNT, 10, 10);
-        allEntries.insert(allEntries.end(), entry1);
-
-        // Test 2
-        auto entry2 = performTest(testNum++, SUB_TESTS_COUNT, 10, 100);
-        allEntries.insert(allEntries.end(), entry2);
-
-        // Test 3
-        auto entry3 = performTest(testNum++, SUB_TESTS_COUNT, 10, 1000);
-        allEntries.insert(allEntries.end(), entry3);
-
-        // Test 4
-        auto entry4 = performTest(testNum++, SUB_TESTS_COUNT, 100, 10);
-        allEntries.insert(allEntries.end(), entry4);
-
-        // Test 5
-        auto entry5 = performTest(testNum++, SUB_TESTS_COUNT, 100, 100);
-        allEntries.insert(allEntries.end(), entry5);
-
-        // Test 6
-        auto entry6 = performTest(testNum++, SUB_TESTS_COUNT, 100, 1000);
-        allEntries.insert(allEntries.end(), entry6);
-
-        // Test 7
-        auto entry7 = performTest(testNum++, SUB_TESTS_COUNT, 1000, 10);
-        allEntries.insert(allEntries.end(), entry7);
-
-        // Test 8
-        auto entry8 = performTest(testNum++, SUB_TESTS_COUNT, 1000, 100);
-        allEntries.insert(allEntries.end(), entry8);
-
-        // Test 9
-        auto entry9 = performTest(testNum++, SUB_TESTS_COUNT, 1000, 1000);
-        allEntries.insert(allEntries.end(), entry9);
-
-        printTestEntries(allEntries);
-    }
 
     static TestEntry performTest(const int testNum, const int subTestsCount, const int size, const ldouble bounds) {
         auto entry = TestEntry(testNum, size, bounds);
@@ -151,10 +108,56 @@ class MatrixTest {
     static void printTestEntries(const std::list<TestEntry>& entries) {
         std::cout << " #\t|\tSIZE\t|\tBOUNDS\t|\tAVG RELATIVE ERROR\t|\tAVG ACCURACY ESTIMATE\t\n";
         for (const auto e : entries) {
-            std::cout << " " << e.num << "\t|\t " << e.size << "\t|\t" << e.bounds << "\t|\t   "
+            std::cout << " " << e.num << "\t|\t " << e.size << "\t|\t" << e.bounds << "\t|\t    "
                 << e.avgRelativeError << "     \t|\t  " << e.avgAccuracyEstimate << "\t\n";
         }
     }
+
+public:
+    
+    static void performDefaultTests() {
+        std::list<TestEntry> allEntries;
+        int testNum = 1;
+
+        // Test 1
+        auto entry1 = performTest(testNum++, SUB_TESTS_COUNT, 10, 10);
+        allEntries.insert(allEntries.end(), entry1);
+
+        // Test 2
+        auto entry2 = performTest(testNum++, SUB_TESTS_COUNT, 10, 100);
+        allEntries.insert(allEntries.end(), entry2);
+
+        // Test 3
+        auto entry3 = performTest(testNum++, SUB_TESTS_COUNT, 10, 1000);
+        allEntries.insert(allEntries.end(), entry3);
+
+        // Test 4
+        auto entry4 = performTest(testNum++, SUB_TESTS_COUNT, 100, 10);
+        allEntries.insert(allEntries.end(), entry4);
+
+        // Test 5
+        auto entry5 = performTest(testNum++, SUB_TESTS_COUNT, 100, 100);
+        allEntries.insert(allEntries.end(), entry5);
+
+        // Test 6
+        auto entry6 = performTest(testNum++, SUB_TESTS_COUNT, 100, 1000);
+        allEntries.insert(allEntries.end(), entry6);
+
+        // Test 7
+        auto entry7 = performTest(testNum++, SUB_TESTS_COUNT, 1000, 10);
+        allEntries.insert(allEntries.end(), entry7);
+
+        // Test 8
+        auto entry8 = performTest(testNum++, SUB_TESTS_COUNT, 1000, 100);
+        allEntries.insert(allEntries.end(), entry8);
+
+        // Test 9
+        auto entry9 = performTest(testNum++, SUB_TESTS_COUNT, 1000, 1000);
+        allEntries.insert(allEntries.end(), entry9);
+
+        printTestEntries(allEntries);
+    }
+
 
 };
 
