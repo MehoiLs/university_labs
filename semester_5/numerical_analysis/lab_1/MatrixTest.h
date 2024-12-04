@@ -62,7 +62,10 @@ class MatrixTest {
         return entry;
     }
 
+public:
     static ldouble calcAccuracyEstimate(const matrixVector& solution) {
+        // todo: последний раз можно сдать 30 декабря!
+        // todo: наладить вычисление (я беру здесь неправильный вектор x-ов)
         ldouble diff = 0;
         for (const auto s : solution) {
             diff = std::max(diff, std::abs(s - 1));
