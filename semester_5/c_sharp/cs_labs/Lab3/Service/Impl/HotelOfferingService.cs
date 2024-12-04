@@ -4,6 +4,8 @@ using Lab3.Model.Create;
 using Lab3.Model.Update;
 using Lab3.Model.View;
 using Lab3.Repository;
+using Microsoft.EntityFrameworkCore;
+
 namespace Lab3.Service.Impl;
 
 public class HotelOfferingService(
@@ -32,7 +34,9 @@ public class HotelOfferingService(
 
     public HotelOfferingViewModel GetById(long id)
     {
-        var offering = repository.GetById(id);
+        var offering = repository.GetEntitySet()
+            .Include(o => o.Hotels)
+            .FirstOrDefault(o => o.Id == id);
         return HotelOfferingMapper.ToModel(offering);
     }
 
