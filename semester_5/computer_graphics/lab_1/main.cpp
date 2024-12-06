@@ -3,22 +3,25 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-static constexpr int SCREEN_SIZE = 800;
+static constexpr int WINDOW_SIZE = 800;
 static constexpr int BOX_SIZE = 100;
 
 auto box = Box(BOX_SIZE, BOX_SIZE, BOX_SIZE);
 
-void onScreen() {
-    if (box.getOffsetX() + BOX_SIZE > SCREEN_SIZE) {
-        box.setOffsetX(SCREEN_SIZE - BOX_SIZE);
+/**
+ * Sets the coordinates of the Box so that in remains within the window screen.
+ */
+void assertWithinScreen() {
+    if (box.getOffsetX() + BOX_SIZE > WINDOW_SIZE) {
+        box.setOffsetX(WINDOW_SIZE - BOX_SIZE);
     }
 
     if (box.getOffsetX() < 0) {
         box.setOffsetX(0);
     }
 
-    if (box.getOffsetY() + BOX_SIZE > SCREEN_SIZE) {
-        box.setOffsetY(SCREEN_SIZE - BOX_SIZE);
+    if (box.getOffsetY() + BOX_SIZE > WINDOW_SIZE) {
+        box.setOffsetY(WINDOW_SIZE - BOX_SIZE);
     }
 
     if (box.getOffsetY() < 0) {
@@ -28,7 +31,7 @@ void onScreen() {
 
 void cursorPosCallback(GLFWwindow* window, const double xPos, const double yPos) {
     box.drag(xPos, yPos);
-    onScreen();
+    assertWithinScreen();
 }
 
 void mouseButtonCallback(GLFWwindow* window, const int button, const int action, const int mods) {
@@ -46,8 +49,25 @@ void mouseButtonCallback(GLFWwindow* window, const int button, const int action,
             box.stopDragging();
         }
 
-        onScreen();
+        assertWithinScreen();
     }
+}
+
+void initGL() {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, WINDOW_SIZE, WINDOW_SIZE, 0, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+}
+
+void renderPrimitives() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    box.draw();
 }
 
 int main() {
@@ -56,7 +76,7 @@ int main() {
         return -1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(SCREEN_SIZE, SCREEN_SIZE, "Box", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "Box", nullptr, nullptr);
     if (!window) {
         std::cerr << "Error while creating GLFW window" << std::endl;
         glfwTerminate();
@@ -65,22 +85,12 @@ int main() {
 
     glfwMakeContextCurrent(window);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, SCREEN_SIZE, SCREEN_SIZE, 0, -1, 1);
-    glMatrixMode(GL_MODELVIEW);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    initGL();
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
     glfwSetCursorPosCallback(window, cursorPosCallback);
 
     while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT);
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-        box.draw();
+        renderPrimitives();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

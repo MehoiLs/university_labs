@@ -3,6 +3,9 @@
 
 Box::Box(const int size, const int offsetX, const int offsetY) : Figure(size, offsetX, offsetY) {}
 
+/**
+ * Initial method to draw the Box.
+ */
 void Box::draw() {
     glColor3f(0.0f, 0.5f, 0.8f);
     glBegin(GL_QUADS);
@@ -13,7 +16,10 @@ void Box::draw() {
     glEnd();
 }
 
-bool Box::isInnerPoint(int x, int y) {
+/**
+ * Asserts that the given pos is within the Box.
+ */
+bool Box::isInnerPoint(const int x, const int y) {
     return x >= getOffsetX() && x <= getOffsetX() + getSize() &&
            y >= getOffsetY() && y <= getOffsetY() + getSize();
 }
