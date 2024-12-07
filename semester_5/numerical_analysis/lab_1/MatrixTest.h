@@ -2,11 +2,14 @@
 #define MATRIXTEST_H
 #include <list>
 #include <map>
+#include <thread>
 
 #include "Matrix.h"
 #include "MatrixUtil.h"
 
 #define EPS 1.0E-9
+
+#define FREEZE_PRINT std::this_thread::sleep_for(std::chrono::milliseconds(200))
 
 struct SubTestEntry {
     ldouble relativeError;
@@ -33,13 +36,89 @@ struct TestEntry {
 
 constexpr int SUB_TESTS_COUNT = 10;
 
-class MatrixTest {
+class MatrixTest final {
     private:
 
+    static TestEntry performTestLoggingFirst(const int testNum, const int subTestsCount, const int size, const ldouble bounds) {
+
+        std::list<SubTestEntry> subEntries;
+        auto entry = TestEntry(testNum, size, bounds);
+
+        {
+            std::cerr << "\tGenerating a random matrix...\n\n";
+            FREEZE_PRINT;
+            const auto matrix = MatrixUtil::generateRandomCalculatingF(size, bounds);
+            matrix->print();
+            FREEZE_PRINT;
+
+            std::cerr << "\n\tMatrix as vectors: \n";
+            FREEZE_PRINT;
+            matrix->printAsVectors();
+            std::cout << std::endl;
+
+            FREEZE_PRINT;
+            std::cerr << "\n\tCopying a matrix & multiplying it by a random vector...\n\n";
+            FREEZE_PRINT;
+            const auto coefMatrix = new Matrix(*matrix);
+            const auto coefVector = MatrixUtil::generateRandomVector(size, bounds);
+            coefMatrix->multipleByCoefs(coefVector);
+            coefMatrix->print();
+            FREEZE_PRINT;
+
+            std::cerr << "\n\tThe 'x' vector:\n";
+            std::cout << "x = ";
+            FREEZE_PRINT;
+            for (const auto x : coefVector) {
+                std::cout << x << "  ";
+            }
+
+            std::cerr << "\n\n\tCopied matrix as vectors: \n";
+            FREEZE_PRINT;
+            coefMatrix->printAsVectors();
+            std::cout << std::endl;
+
+            FREEZE_PRINT;
+            std::cerr << "\n\tSolving the initial matrix...\n\n";
+            FREEZE_PRINT;
+            const auto solution = matrix->solveLogging();
+
+            FREEZE_PRINT;
+            std::cerr << "\tSolving the multiplied matrix...\n\n";
+            FREEZE_PRINT;
+            const auto coefSolution = coefMatrix->solveLogging();
+
+            FREEZE_PRINT;
+            std::cerr << "\tCalculating the relative error & accuracy estimate...\n\n";
+            const auto relativeError = calcRelativeError(coefSolution, solution);
+            const auto accuracyEstimate = calcAccuracyEstimate(solution);
+
+            std::cerr << "Relative error:\t\t "<< relativeError << std::endl;
+            std::cerr << "Accuracy estimate:\t " << accuracyEstimate << std::endl << std::endl;
+
+            const auto subEntry = SubTestEntry(relativeError, accuracyEstimate);
+            subEntries.insert(subEntries.end(), subEntry);
+        }
+
+        for (int i = 1; i < subTestsCount; i++) {
+            const auto matrix = MatrixUtil::generateRandomCalculatingF(size, bounds);
+            const auto coefMatrix = new Matrix(*matrix);
+            coefMatrix->multipleByCoefs(MatrixUtil::generateRandomVector(size, bounds));
+
+            const auto solution = matrix->solve();
+            const auto coefSolution = coefMatrix->solve();
+
+            const auto relativeError = calcRelativeError(coefSolution, solution);
+            const auto accuracyEstimate = calcAccuracyEstimate(solution);
+            const auto subEntry = SubTestEntry(relativeError, accuracyEstimate);
+            subEntries.insert(subEntries.end(), subEntry);
+        }
+        collapseSubEntries(entry, subEntries);
+        return entry;
+    }
 
     static TestEntry performTest(const int testNum, const int subTestsCount, const int size, const ldouble bounds) {
-        auto entry = TestEntry(testNum, size, bounds);
         std::list<SubTestEntry> subEntries;
+        auto entry = TestEntry(testNum, size, bounds);
         for (int i = 0; i < subTestsCount; i++) {
             const auto matrix = MatrixUtil::generateRandomCalculatingF(size, bounds);
             const auto coefMatrix = new Matrix(*matrix);
@@ -52,11 +131,6 @@ class MatrixTest {
             const auto accuracyEstimate = calcAccuracyEstimate(solution);
             const auto subEntry = SubTestEntry(relativeError, accuracyEstimate);
             subEntries.insert(subEntries.end(), subEntry);
-            //
-            // printVector(coefSolution);
-            // std::cout << std::endl << std::endl;
-            // printVector(solution);
-            // std::cout << std::endl << std::endl;
         }
         collapseSubEntries(entry, subEntries);
         return entry;
@@ -64,8 +138,6 @@ class MatrixTest {
 
 public:
     static ldouble calcAccuracyEstimate(const matrixVector& solution) {
-        // todo: последний раз можно сдать 30 декабря!
-        // todo: наладить вычисление (я беру здесь неправильный вектор x-ов)
         ldouble diff = 0;
         for (const auto s : solution) {
             diff = std::max(diff, std::abs(s - 1));
@@ -126,8 +198,9 @@ public:
         auto entry1 = performTest(testNum++, SUB_TESTS_COUNT, 10, 10);
         allEntries.insert(allEntries.end(), entry1);
 
-        // Test 2
-        auto entry2 = performTest(testNum++, SUB_TESTS_COUNT, 10, 100);
+        //todo
+        //  Test 2
+        auto entry2 = performTestLoggingFirst(testNum++, SUB_TESTS_COUNT, 10, 100);
         allEntries.insert(allEntries.end(), entry2);
 
         // Test 3

@@ -6,12 +6,6 @@
 int main()
 {
     const auto path = R"(C:\Users\MehoiL\Documents\GitHub\university_labs\semester_5\numerical_analysis\lab_1\matrix.txt)";
-
-    // TODO: см. calcAccuracyEstimate()
-
-    // TODO: вывод одного рандомного теста: исходной и решенной матрицы (дробная), вектор x-ов, все другие вектора (a, b..) и остальное (ПОЛНЫЙ ВЫВОД)
-    //  и доделать отчёт!
-
     
     std::cout << "1 - from file; 2 - perform the tests; e - exit\n";
     char command;
@@ -24,9 +18,9 @@ int main()
                 matrix->print();
                 const auto solution = matrix->solve();
                 std::cout << "SOLVED MATRIX: " << std::endl << std::endl;
-                std::cout << "Оценка точности: " << MatrixTest::calcAccuracyEstimate(solution)<< std::endl;
-                // std::cout << "Оценка точности: " << MatrixTest::calcRelativeError(f, solution);
                 matrix->print();
+                std::cout << std::endl << "Accuracy estimate: " << MatrixTest::calcAccuracyEstimate(solution)<< std::endl;
+                std::cout << "Relative error: " << MatrixTest::calcRelativeError(f, solution);
                 break;
             }
             case '2': {

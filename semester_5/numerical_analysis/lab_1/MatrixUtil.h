@@ -13,7 +13,7 @@
 constexpr ldouble RANDOM_MIX_MAX = 100.0L;
 constexpr ldouble RANDOM_VEC_BOUNDS = 100.0L;
 
-class MatrixUtil {
+class MatrixUtil final {
 public:
 
     static void forceOverrideVectorsPQ(const size_t k, const matrixVector& a, const matrixVector& b, const matrixVector& c, matrixVector& p, matrixVector& q) {

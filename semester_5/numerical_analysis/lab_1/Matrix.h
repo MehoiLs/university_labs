@@ -21,7 +21,7 @@ private:
     matrixVector f;
 
     static ldouble round(const ldouble x) {
-        return std::round(x * 1000.0L) / 1000.0L;
+        return std::round(x * 100.0L) / 100.0L;
     }
 
     [[nodiscard]]
@@ -215,6 +215,26 @@ public:
         return f;
     }
 
+    matrixVector solveLogging() {
+        std::cout << "\t\t[TRANSFORMING MAIN & SUB DIAGONALS]\n";
+        transformMainAndSubDiagonal();
+        print();
+
+        std::cout << "\t\t[TRANSFORMING UPPER DIAGONAL]\n";
+        transformUpperDiagonal();
+        print();
+
+        std::cout << "\t\t[TRANSFORMING K-ROW]\n";
+        transformRowK();
+        print();
+
+        std::cout << "\t\t[TRANSFORMING K-COLUMN]\n";
+        transformColumnK();
+        print();
+
+        return f;
+    }
+
     void multipleByCoefs(const matrixVector& coefs) {
         for (auto i = 0; i < size; i++) {
             if (i == k - 1) {
@@ -273,6 +293,44 @@ public:
             }
             std::cout << "|  " << round(f[i]);
             std::cout << std::endl << std::endl;
+        }
+    }
+
+    void printAsVectors() const {
+        std::cout << std::setprecision(3);
+
+        std::cout << "n = " << size << "; k = " << k << std::endl;
+
+        std::cout << "a = ";
+        for (const auto _a : a) {
+            std::cout << _a << "  ";
+        }
+
+        std::cout << "\nb = ";
+        for (const auto _b : b) {
+            std::cout << _b << "  ";
+        }
+
+        std::cout << "\nc = ";
+        for (const auto _c : c) {
+            std::cout << _c << "  ";
+        }
+
+
+        std::cout << "\np = ";
+        for (const auto _p : p) {
+            std::cout << _p << "  ";
+        }
+
+        std::cout << "\nq = ";
+        for (const auto _q : q) {
+            std::cout << _q << "  ";
+        }
+
+
+        std::cout << "\nf = ";
+        for (const auto _f : f) {
+            std::cout << _f << "  ";
         }
     }
 
