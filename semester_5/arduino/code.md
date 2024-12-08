@@ -164,5 +164,202 @@ void loop() {
 </p>
 
 ```arduino
+#include <EEPROM.h>
+#include <LiquidCrystal_I2C.h>
+#include "MatrixKeypad.h"
+
+#define MAX_INT_VALUE 2147483647
+
+const byte ROWS_PINS[4] = { 46, 47, 48, 49 };
+const byte COLS_PINS[4] = { 50, 51, 52, 53 };
+
+long memory = 0, num1 = 0, num2 = 0, calcResult = 0;
+byte currentStep = 0;
+bool resultDisplayed = false;
+
+char pressedKey = NO_PRESS, selectedOperation = NO_PRESS;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+MatrixKeypad keypad(ROWS_PINS, COLS_PINS);
+
+void updateDisplay(const String &line1 = "", const String &line2 = "") {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(line1);
+    lcd.setCursor(0, 1);
+    lcd.print(line2);
+}
+
+void resetCalculator() {
+    num1 = 0;
+    num2 = 0;
+    selectedOperation = NO_PRESS;
+    calcResult = 0;
+    currentStep = 0;
+    resultDisplayed = false;
+}
+
+void handleNumberInput(long &target, byte digit) {
+    if (target < MAX_INT_VALUE / 10) {
+        target = target * 10 + digit;
+    }
+}
+
+void performCalculation() {
+    switch (selectedOperation) {
+        case '+': calcResult = num1 + num2; break;
+        case '-': calcResult = num1 - num2; break;
+        case '*': calcResult = num1 * num2; break;
+        case '/': calcResult = (num2 != 0) ? num1 / num2 : 0; break;
+        default: calcResult = 0; break;
+    }
+}
+
+void processKeyPress(char key) {
+    if (isdigit(key)) {
+        if (resultDisplayed) { 
+            resetCalculator();
+        }
+        handleNumberInput((currentStep == 0) ? num1 : num2, key - '0');
+        updateDisplay(String(num1), (currentStep == 0) ? "" : String(num2));
+
+    } else if (key == '#') {
+        if (resultDisplayed) {
+            memory = calcResult;
+            EEPROM.put(0, memory);
+            updateDisplay("Saved to memory", String(calcResult));
+        } else if (currentStep == 1 && num2 == 0) {
+            num2 = memory;
+            updateDisplay(String(num1), String(num2));
+        } else if (currentStep == 0 && num1 == 0) {
+            num1 = memory;
+            updateDisplay(String(num1), String(selectedOperation));
+        } else if (currentStep == 1) {
+            performCalculation();
+            updateDisplay("= " + String(calcResult), "");
+            resultDisplayed = true;
+        }
+
+    } else if (key == '*') {
+        resetCalculator();
+        updateDisplay("A+ B- C* D/ #=", String(memory));
+        return;
+
+    } else if (key >= 'A' && key <= 'D' && currentStep == 0) {
+        if (resultDisplayed) {
+            num1 = calcResult;
+            resultDisplayed = false;
+        }
+        selectedOperation = (key == 'A') ? '+' : (key == 'B') ? '-' : (key == 'C') ? '*' : '/';
+        currentStep = 1;
+        updateDisplay(String(num1), String(selectedOperation));
+    }
+}
+
+void setup() {
+    lcd.init();
+    lcd.backlight();
+    EEPROM.get(0, memory);
+    updateDisplay("A+ B- C* D/ #=", String(memory));
+}
+
+void loop() {
+    pressedKey = keypad.scanKey();
+    if (pressedKey != NO_PRESS) {
+        processKeyPress(pressedKey);
+    }
+}
+```
+
+"Matrix.h"
+```h
+#ifndef MATRIX_KEYPAD_H
+#define MATRIX_KEYPAD_H
+
+#include <Arduino.h>
+
+#define ROWS 4
+#define COLUMNS 4
+#define NO_PRESS '\0'
+#define DEBOUNCE_TIME 50
+
+class MatrixKeypad {
+public:
+    MatrixKeypad(const byte* rowPins, const byte* colPins);
+    ~MatrixKeypad();
+    char scanKey();
+
+private:
+    const byte* _rowPins;
+    const byte* _colPins;
+    const char _keyMapping[ROWS * COLUMNS] = {
+        '1', '2', '3', 'A',
+        '4', '5', '6', 'B',
+        '7', '8', '9', 'C',
+        '*', '0', '#', 'D'
+    };
+    unsigned long _lastPressTime = 0;
+
+    void setRowPinsOutput();
+    void resetColPins();
+};
+
+#endif
+```
+
+"Matrix.cpp"
+```cpp
+#include "MatrixKeypad.h"
+
+MatrixKeypad::MatrixKeypad(const byte* rowPins, const byte* colPins)
+    : _rowPins(rowPins), _colPins(colPins) {
+    for (byte i = 0; i < ROWS; i++) {
+        pinMode(_rowPins[i], OUTPUT);
+        digitalWrite(_rowPins[i], HIGH);
+    }
+
+    for (byte j = 0; j < COLUMNS; j++) {
+        pinMode(_colPins[j], INPUT_PULLUP);
+    }
+}
+
+MatrixKeypad::~MatrixKeypad() {
+    // ������ �� ����� �������, ��� ��� ������� ���������� �����
+}
+
+char MatrixKeypad::scanKey() {
+    for (byte row = 0; row < ROWS; row++) {
+        digitalWrite(_rowPins[row], LOW);
+
+        for (byte col = 0; col < COLUMNS; col++) {
+            if (digitalRead(_colPins[col]) == LOW) {
+                // �������� �� �������
+                if (millis() - _lastPressTime > DEBOUNCE_TIME) {
+                    _lastPressTime = millis();
+                    while (digitalRead(_colPins[col]) == LOW); // ���� ���������� ������
+
+                    resetColPins(); // ��������������� ���������
+                    return _keyMapping[row * COLUMNS + col];
+                }
+            }
+        }
+
+        digitalWrite(_rowPins[row], HIGH); // ���������� ������
+    }
+    return NO_PRESS; // ���� ������ �� ������
+}
+
+void MatrixKeypad::setRowPinsOutput() {
+    for (byte i = 0; i < ROWS; i++) {
+        pinMode(_rowPins[i], OUTPUT);
+        digitalWrite(_rowPins[i], HIGH);
+    }
+}
+
+void MatrixKeypad::resetColPins() {
+    for (byte i = 0; i < COLUMNS; i++) {
+        digitalWrite(_colPins[i], HIGH);
+    }
+}
 
 ```
