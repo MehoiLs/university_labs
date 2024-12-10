@@ -19,8 +19,7 @@ int main()
                 const auto solution = matrix->solve();
                 std::cout << "SOLVED MATRIX: " << std::endl << std::endl;
                 matrix->print();
-                std::cout << std::endl << "Accuracy estimate: " << MatrixTest::calcAccuracyEstimate(solution)<< std::endl;
-                std::cout << "Relative error: " << MatrixTest::calcRelativeError(f, solution);
+                std::cout << std::endl << "Accuracy estimate: " << MatrixUtil::calcAccuracyEstimate(solution)<< std::endl;
                 break;
             }
             case '2': {

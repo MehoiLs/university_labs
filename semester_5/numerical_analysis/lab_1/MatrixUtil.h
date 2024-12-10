@@ -16,6 +16,15 @@ constexpr ldouble RANDOM_VEC_BOUNDS = 100.0L;
 class MatrixUtil final {
 public:
 
+    static ldouble calcAccuracyEstimate(const matrixVector& solution) {
+        const matrixVector vec = {2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+        ldouble diff = 0;
+        for (auto i = 0; i < solution.size(); i++) {
+            diff = std::max(diff, std::abs(solution[i] - vec[i]));
+        }
+        return diff;
+    }
+
     static void forceOverrideVectorsPQ(const size_t k, const matrixVector& a, const matrixVector& b, const matrixVector& c, matrixVector& p, matrixVector& q) {
         p[k-2] = a[k-2];
         q[k-2] = c[k-2];
