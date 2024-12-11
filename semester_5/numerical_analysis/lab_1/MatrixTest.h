@@ -1,5 +1,7 @@
 #ifndef MATRIXTEST_H
 #define MATRIXTEST_H
+
+#include <format>
 #include <list>
 #include <map>
 #include <thread>
@@ -46,54 +48,57 @@ class MatrixTest final {
 
         {
             std::cerr << "\tGenerating a random matrix...\n\n";
-            FREEZE_PRINT;
             const auto matrix = MatrixUtil::generateRandomCalculatingF(size, bounds);
+
+            FREEZE_PRINT;
             matrix->print();
             FREEZE_PRINT;
-
             std::cerr << "\n\tMatrix as vectors: \n";
             FREEZE_PRINT;
             matrix->printAsVectors();
             std::cout << std::endl;
-
             FREEZE_PRINT;
             std::cerr << "\n\tCopying a matrix & multiplying it by a random vector...\n\n";
             FREEZE_PRINT;
-            const auto coefMatrix = new Matrix(*matrix);
+
             const auto coefVector = MatrixUtil::generateRandomVector(size, bounds);
-            coefMatrix->multipleByCoefs(coefVector);
+            const auto coefMatrix = MatrixUtil::multiplyMatrixOnlyF(*matrix, coefVector);
+            
+            FREEZE_PRINT;
             coefMatrix->print();
             FREEZE_PRINT;
-
-            std::cerr << "\n\tThe 'x' vector:\n";
-            std::cout << "x = ";
-            FREEZE_PRINT;
-            for (const auto x : coefVector) {
-                std::cout << x << "  ";
-            }
-
             std::cerr << "\n\n\tCopied matrix as vectors: \n";
             FREEZE_PRINT;
             coefMatrix->printAsVectors();
             std::cout << std::endl;
-
+            
             FREEZE_PRINT;
             std::cerr << "\n\tSolving the initial matrix...\n\n";
             FREEZE_PRINT;
+            
             const auto solution = matrix->solveLogging();
 
             FREEZE_PRINT;
             std::cerr << "\tSolving the multiplied matrix...\n\n";
             FREEZE_PRINT;
+            
             const auto coefSolution = coefMatrix->solveLogging();
+            
+            FREEZE_PRINT;
+            std::cerr << "\n  \t'INITIAL' x VECTOR \t\t|\t 'SOLVED' x VECTOR\n";
+            for (auto i = 0; i < size; i++) {
+                std::cerr << "\t" << std::setprecision(20) << coefVector[i] << "\t\t|\t" << coefSolution[i] << "\n";
+            }
+
 
             FREEZE_PRINT;
-            std::cerr << "\tCalculating the relative error & accuracy estimate...\n\n";
-            const auto relativeError = calcRelativeError(coefSolution, solution);
+            std::cerr << "\n\n\tCalculating the relative error & accuracy estimate...\n\n";
             const auto accuracyEstimate = calcAccuracyEstimate(solution);
+            const auto relativeError = calcRelativeError(coefVector, coefSolution);
 
-            std::cerr << "Relative error:\t\t "<< relativeError << std::endl;
-            std::cerr << "Accuracy estimate:\t " << accuracyEstimate << std::endl << std::endl;
+            FREEZE_PRINT;
+            std::cerr << "Accuracy estimate:\t " << accuracyEstimate << std::endl;
+            std::cerr << "Relative error:\t\t "<< relativeError << std::endl << std::endl;
 
             const auto subEntry = SubTestEntry(relativeError, accuracyEstimate);
             subEntries.insert(subEntries.end(), subEntry);
@@ -101,14 +106,16 @@ class MatrixTest final {
 
         for (int i = 1; i < subTestsCount; i++) {
             const auto matrix = MatrixUtil::generateRandomCalculatingF(size, bounds);
-            const auto coefMatrix = new Matrix(*matrix);
-            coefMatrix->multipleByCoefs(MatrixUtil::generateRandomVector(size, bounds));
+            
+            const auto coefVector = MatrixUtil::generateRandomVector(size, bounds);
+            const auto coefMatrix = MatrixUtil::multiplyMatrixOnlyF(*matrix, coefVector);
 
             const auto solution = matrix->solve();
             const auto coefSolution = coefMatrix->solve();
 
-            const auto relativeError = calcRelativeError(coefSolution, solution);
             const auto accuracyEstimate = calcAccuracyEstimate(solution);
+            const auto relativeError = calcRelativeError(coefVector, coefSolution);
+
             const auto subEntry = SubTestEntry(relativeError, accuracyEstimate);
             subEntries.insert(subEntries.end(), subEntry);
         }
@@ -121,14 +128,16 @@ class MatrixTest final {
         auto entry = TestEntry(testNum, size, bounds);
         for (int i = 0; i < subTestsCount; i++) {
             const auto matrix = MatrixUtil::generateRandomCalculatingF(size, bounds);
-            const auto coefMatrix = new Matrix(*matrix);
-            coefMatrix->multipleByCoefs(MatrixUtil::generateRandomVector(size, bounds));
+            
+            const auto coefVector = MatrixUtil::generateRandomVector(size, bounds);
+            const auto coefMatrix = MatrixUtil::multiplyMatrixOnlyF(*matrix, coefVector);
 
             const auto solution = matrix->solve();
             const auto coefSolution = coefMatrix->solve();
 
-            const auto relativeError = calcRelativeError(coefSolution, solution);
             const auto accuracyEstimate = calcAccuracyEstimate(solution);
+            const auto relativeError = calcRelativeError(coefVector, coefSolution);
+
             const auto subEntry = SubTestEntry(relativeError, accuracyEstimate);
             subEntries.insert(subEntries.end(), subEntry);
         }
@@ -182,6 +191,7 @@ public:
 
     static void printTestEntries(const std::list<TestEntry>& entries) {
         std::cout << " #\t|\tSIZE\t|\tBOUNDS\t|\tAVG RELATIVE ERROR\t|\tAVG ACCURACY ESTIMATE\t\n";
+        FREEZE_PRINT;
         for (const auto e : entries) {
             std::cout << " " << e.num << "\t|\t " << e.size << "\t|\t" << e.bounds << "\t|\t    "
                 << e.avgRelativeError << "     \t|\t  " << e.avgAccuracyEstimate << "\t\n";
