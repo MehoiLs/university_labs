@@ -207,6 +207,10 @@ public:
         return f;
     }
 
+    void setF(const matrixVector& vec) {
+        f = vec;
+    }
+
     matrixVector solve() {
         transformMainAndSubDiagonal();
         transformUpperDiagonal();
@@ -235,28 +239,35 @@ public:
         return f;
     }
 
+    // void multipleFByCoefs(const matrixVector& coefs) {
+    //     for (auto i = 0; i < size; i++) {
+    //         f[i] *= coefs[i];
+    //     }
+    // }
+
     void multipleByCoefs(const matrixVector& coefs) {
         for (auto i = 0; i < size; i++) {
             if (i == k - 1) {
                 for (auto ip = 0; ip < size; ip++) {
-                    p[ip] *= coefs[i];
+                    p[ip] *= coefs[ip];
                 }
+                // sync
                 a[i-1] = p[i-1];
                 b[i] = q[i] = p[i];
                 c[i] = p[i+1];
-                f[i] *= coefs[i];
+                // f[i] *= coefs[i];
                 continue;
             }
-
+    
             b[i] *= coefs[i];
-            q[i] *= coefs[i];
-            f[i] *= coefs[i];
-
+            q[i] *= coefs[k-1];
+            // f[i] *= coefs[i];
+    
             if (i < size - 1) {
-                c[i] *= coefs[i];
+                c[i] *= coefs[i+1];
             }
             if (i > 0) {
-                a[i-1] *= coefs[i];
+                a[i-1] *= coefs[i-1];
             }
         }
         assertMatrixIntersections();
@@ -331,6 +342,35 @@ public:
         std::cout << "\nf = ";
         for (const auto _f : f) {
             std::cout << _f << "  ";
+        }
+    }
+
+    void recalculateVectorFAsSum() {
+        for (auto i = 0; i < size; i++) {
+            ldouble val = 0;
+
+            // it's vector 'p', therefore must sum up all its elements
+            if (i == k - 1) {
+                for (const auto _p: p) {
+                    val += _p;
+                }
+                f[i] = val;
+                continue;
+            }
+
+            val += b[i] + q[i];
+
+            // 'a' must be within bounds and must not intersect with 'q'
+            if (i > 0 && i != k) {
+                val += a[i-1];
+            }
+
+            // 'c' must be within bounds and must not intersect with 'q'
+            if (i < size - 1 && i != k - 2) {
+                val += c[i];
+            }
+
+            f[i] = val;
         }
     }
 

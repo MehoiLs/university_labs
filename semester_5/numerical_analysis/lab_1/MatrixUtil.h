@@ -181,6 +181,18 @@ public:
         return vec;
    }
 
+    static Matrix* multiplyMatrixOnlyF(const Matrix& matrixGiven, const matrixVector& coefs) {
+        const auto tempMatrix = new Matrix(matrixGiven);
+        tempMatrix->multipleByCoefs(coefs);
+        tempMatrix->recalculateVectorFAsSum();
+        const auto calculatedF = tempMatrix->getF();
+        const auto transformedMatrix = new Matrix(matrixGiven);
+        transformedMatrix->setF(calculatedF);
+
+        delete tempMatrix;
+        return transformedMatrix;
+    }
+
 };
 
 #endif //MATRIXUTIL_H
