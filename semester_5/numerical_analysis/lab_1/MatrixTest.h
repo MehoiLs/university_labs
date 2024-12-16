@@ -99,7 +99,8 @@ class MatrixTest final {
             FREEZE_PRINT;
             std::cerr << "Accuracy estimate:\t " << accuracyEstimate << std::endl;
             std::cerr << "Relative error:\t\t "<< relativeError << std::endl << std::endl;
-
+            FREEZE_PRINT;
+            
             const auto subEntry = SubTestEntry(relativeError, accuracyEstimate);
             subEntries.insert(subEntries.end(), subEntry);
         }
