@@ -11,7 +11,7 @@ public:
     void translate(float x, float y);
     void rotate(float angle);
 
-    void draw();
+    void draw() const;
 
 private:
     std::vector<glm::vec2> mVertices;

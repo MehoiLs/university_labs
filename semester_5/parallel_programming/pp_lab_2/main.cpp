@@ -58,7 +58,7 @@ void threadFunction(const double a, const double b, const double h, const int nu
 
 int main() {
     constexpr int N = MAX_THREADS_COUNT; // Number of subintervals and threads
-    constexpr int numSamples = 10; // Number of sample points per subinterval for min/max
+    constexpr int numSamples = 1000000; // Number of sample points per subinterval for min/max
 
     constexpr double A = -25.0;
     constexpr double B = 5.0;
